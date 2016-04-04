@@ -1,5 +1,16 @@
 var request = require('request');
 
+module.exports.loginCheck = function(req, res, next) {
+	var token = req.session.schedulerToken;
+	if (token) {
+		var payloadEncoded = new Buffer(token.split('.')[1], 'base64');
+		var payload = JSON.parse(payloadEncoded.toString());
+		res.locals.isLoggedIn = payload.exp > Date.now() / 1000;
+		res.locals.username = payload.login;
+	}
+	next();
+};
+
 module.exports.homeCtrl = function (req, res) {
 	res.render('index');
 };
@@ -95,7 +106,7 @@ module.exports.loginCtrl = function(req, res) {
 			req.session.schedulerToken = body.token;
 			res.status(200);
 			console.log('@@@@@\n@@@@@	Successfully logged in!\n@@@@@')
-			res.render('index');
+			res.redirect('/');
 		}
 	});
 }

@@ -31,6 +31,14 @@ html
 							a(href='events') EVENTS
 						li
 							a(href='register') REGISTER
+					if !isLoggedIn
+						form.navbar-form.navbar-right(action='http://localhost:3002/login', method='get')
+							.form-group
+								button.btn.btn-primary(type='submit') Login
+					else
+						ul.nav.navbar-nav.navbar-right
+							li 
+								a Welcome #{username}
 		.container
 			.row
 				.well.col-md-10.col-md-offset-1

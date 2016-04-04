@@ -9,6 +9,7 @@ var auth = jwt({
 })
 
 /* GET home page. */
+router.use(mainCtrl.loginCheck);
 router.get('/', mainCtrl.homeCtrl);
 router.get('/announcements', mainCtrl.announceCtrl);
 router.get('/events', mainCtrl.eventsCtrl);

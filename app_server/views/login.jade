@@ -7,11 +7,13 @@ block content
 	.clearfix
 	.col-md-8.col-md-offset-2
 		form(action='', method='post')
-			.form-group
+			.form-group.col-sm-6.col-sm-offset-3
 				label(for='login') Username
 				input.form-control(type='text', name='login', placeholder='Login Name')
-			.form-group
+			.clearfix
+			.form-group.col-sm-6.col-sm-offset-3
 				label(for='password') Password
 				input.form-control(type='password', name='password', placeholder='Password')
+			.clearfix
 			.text-center
 				button.btn.btn-primary(type='submit') Login
