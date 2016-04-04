@@ -1,0 +1,24 @@
+extends layout
+
+block content
+	h2#newAnnouncement.col-md-12.text-center 
+		a.page-header Make an Announcement
+	.col-md-10.col-md-offset-1
+		form.form-horizontal(action='', method='post')
+			.form-group
+				label.control-label.col-xs-2(for='announcement') Announcement
+				.col-xs-10
+					input.form-control(type='text', name='announcement')
+			.form-group
+				label.control-label.col-xs-2(for='author') Author
+				.col-xs-3
+					input.form-control(type='text', name='author')
+			.form-group
+				label.control-label.col-xs-2(for='details') Details
+				.col-xs-10
+					textarea.form-control(name='details', wrap='hard', col='20')
+			.form-group
+				input(name='time', type='hidden', value='')				
+			.form-group
+				.col-xs-2.col-xs-offset-10
+					button.btn.btn-primary(type='submit') Submit

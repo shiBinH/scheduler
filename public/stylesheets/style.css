@@ -1,0 +1,31 @@
+body {
+  padding-top: 70px;
+	padding-bottom: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+#title {
+	font-weight: 800;
+	font-size: 1.4em;
+	text-decoration: none;
+}
+
+#homeAnnouncements ul li footer {
+	font-size: .65em;
+}
+#homeAnnouncements {
+	box-shadow: -5px 5px 10px;
+}
+#homeEvents {
+	box-shadow: 5px 5px 10px;
+}
+
+#homeAnnouncements a, #homeEvents a, #announcements-title a, #events-title a,
+#newAnnouncement a, #register a, #login a
+{
+	text-decoration: none;
+}
+
+textarea {
+	resize: vertical;
+}

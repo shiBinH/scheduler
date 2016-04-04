@@ -1,0 +1,21 @@
+extends layout
+
+mixin addAnnouncement(title, description, author, time)
+	.panel.panel-success
+		.panel-heading
+			h4= title
+		.panel-body
+			!{description}
+			footer.text-muted.text-right
+				small
+					|	#{author}
+					br
+					| #{time}
+
+block content
+	h2#announcements-title.col-md-12.text-center
+		a
+			big.page-header Announcements
+	.col-md-10.col-md-offset-1
+		each announcement in announcements
+			+addAnnouncement(announcement.title, announcement.description, announcement.author, announcement.time)

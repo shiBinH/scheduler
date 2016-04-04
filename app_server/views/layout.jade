@@ -1,0 +1,51 @@
+doctype html
+html
+	head
+		meta(charset='utf-8')
+		meta(name='viewport', content='width=device-width, initial-scaled=1.0')
+		link(rel='stylesheet', href='/stylesheets/style.css')
+		link(rel='stylesheet', href='/bootstrap/css/bootstrap.min.css')
+		title Scheduler
+		script(src='//cdn.tinymce.com/4/tinymce.min.js')
+		script tinymce.init({ selector:'textarea' });
+	body
+		.container
+			.row
+				header.col-sm-12
+					h1.page-header.text-center
+						a#title(href='') Scheduler 
+		nav.navbar.navbar-default.navbar-fixed-top.navbar-inverse
+			.container
+				.navbar-header
+					button.navbar-toggle(type='button', data-toggle='collapse', data-target='#horizontalnav')
+						span.icon-bar
+						span.icon-bar
+						span.icon-bar
+				#horizontalnav.collapse.navbar-collapse
+					ul.nav.navbar-nav
+						li
+							a(href='/') HOME
+						li
+							a(href='announcements') ANNOUNCEMENTS
+						li
+							a(href='events') EVENTS
+						li
+							a(href='register') REGISTER
+		.container
+			.row
+				.well.col-md-10.col-md-offset-1
+					block content
+				.clearfix
+		.container
+			.row
+				footer.text-right.col-sm-12
+					small
+						|	By SBH
+						br
+						| sh2581@nyu.edu
+						br
+						|	github.com/shiBinH
+		
+		script(src='/javascripts/jquery-2.2.0.min.js')
+		script(src='/bootstrap/js/bootstrap.min.js')
+

@@ -1,0 +1,17 @@
+extends layout
+
+block content
+	h2#login.col-md-12.text-center
+		a.page-header Login
+	.col-md-.col-md-offset-2.text-danger #{message}
+	.clearfix
+	.col-md-8.col-md-offset-2
+		form(action='', method='post')
+			.form-group
+				label(for='login') Username
+				input.form-control(type='text', name='login', placeholder='Login Name')
+			.form-group
+				label(for='password') Password
+				input.form-control(type='password', name='password', placeholder='Password')
+			.text-center
+				button.btn.btn-primary(type='submit') Login

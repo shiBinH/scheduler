@@ -1,0 +1,20 @@
+extends layout
+
+block content
+	h2#register.col-md-12.text-center 
+		a.page-header Register
+	.col-md-8.col-md-offset-2.text-danger #{message}
+	.clearfix
+	.col-md-8.col-md-offset-2
+		form(action='', method='post')
+			.form-group
+				label(for='username') Username
+				input.form-control(type='text', name='username', placeholder='Username')
+			.form-group
+				label(for='password') Password
+				input.form-control(type='password', name='password', placeholder='Password')
+			.form-group
+				label(for='email') Contact Email
+				input.form-control(type='email', name='email', placeholder='Email')
+			.text-right
+				button.btn.btn-primary(type='submit') Submit
