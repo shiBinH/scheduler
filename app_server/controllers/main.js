@@ -33,13 +33,22 @@ module.exports.announceCtrl = function (req, res) {
 module.exports.eventsCtrl = function(req, res) {
 	res.render('events');
 };
+module.exports.addEventsCtrl = function(req, res) {
+	res.status(200);
+	res.render('eventsForm', {
+		message: ''
+	});
+};
 
 module.exports.registerForm = function(req, res) {
 	res.render('register', {message: ''});
 };
 module.exports.registerCtrl = function(req, res) {
 	if (!req.body.username || !req.body.password || !req.body.email) {
-		
+		res.status('400');
+		res.render('register',{
+			message: 'All fields required'
+		});
 	}
 	var requestOptions = {
 		url: 'http://localhost:3002/api/register',
@@ -62,7 +71,7 @@ module.exports.registerCtrl = function(req, res) {
 			console.log('From SERVER: all fields required');
 			res.status(response.statusCode);
 			res.render('register', {
-				message: 'All fields required'
+				message: 'Username or email already exists'
 			});
 		}
 		else {
@@ -110,6 +119,11 @@ module.exports.loginCtrl = function(req, res) {
 		}
 	});
 }
+module.exports.logoutCtrl = function(req, res) {
+	req.session.schedulerToken = null;
+	res.status(200);
+	res.redirect('/');
+};
 
 module.exports.announcementForm = function(req, res) {
 	res.render('addAnnouncement');

@@ -18,6 +18,7 @@ module.exports.register = function(req, res) {
   user.save(function(err) {
     if (err) {
       res.status(400);
+			console.log(err);
       res.json(err);
     } else {
       res.status(201);
@@ -55,4 +56,3 @@ module.exports.login = function(req, res) {
     }
   })(req, res);
 };
-

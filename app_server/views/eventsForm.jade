@@ -1,0 +1,34 @@
+extends layout
+
+
+mixin outputMonths()
+	-var months = ['January', 'February','March','April','May','June','July','August','September','October','November','December'];
+	-var thisMonth = (new Date()).getMonth();
+	-for (var i=0; i<12; i++)
+		-if (i===thisMonth)
+			option(value=i, selected='selected') #{months[i]}
+		-else 
+			option(value=i) #{months[i]}
+
+block content
+	-var thisYear = (new Date()).getFullYear();
+	h2#newEvent.col-md-12.text-center
+		a.page-header Add an Event
+	.col-md-8.col-md-offset-2
+		form(action='', method='post')
+			.form-group.col-sm-9
+				label(for='title') Event Name
+				input.form-control(type='text')
+			.clearfix
+			.form-group
+				label.col-sm-12 When
+					br
+					small.text-muted ie. 4 24 1993
+				.col-sm-2
+					input.form-control.input-sm(type='text', maxlength='2', placeholder='Month')
+				.col-sm-2
+					input.form-control.input-sm(type='text', maxlength='2', placeholder='Day')
+				.col-sm-2
+					input.form-control.input-sm(type='text', maxlength='4', placeholder=thisYear)
+				.clearfix
+			button.btn.btn-primary(type='submit') Submit

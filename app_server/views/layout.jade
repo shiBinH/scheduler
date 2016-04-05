@@ -39,6 +39,9 @@ html
 						ul.nav.navbar-nav.navbar-right
 							li 
 								a Welcome #{username}
+							li
+								form.navbar-form(action='http://localhost:3002/logout', method='get')
+									button.btn.btn-default(type='submit') Logout
 		.container
 			.row
 				.well.col-md-10.col-md-offset-1

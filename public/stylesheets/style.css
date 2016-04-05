@@ -21,7 +21,7 @@ body {
 }
 
 #homeAnnouncements a, #homeEvents a, #announcements-title a, #events-title a,
-#newAnnouncement a, #register a, #login a
+#newAnnouncement a, #register a, #login a, #newEvent a
 {
 	text-decoration: none;
 }
