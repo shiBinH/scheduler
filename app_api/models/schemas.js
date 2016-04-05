@@ -16,7 +16,6 @@ var eventSchema = new mongoose.Schema({
 	nRegistered: {
 		type: Number,
 		default: 0,
-		max: 10
 	},
 	open: {type: Boolean, default: true}
 });

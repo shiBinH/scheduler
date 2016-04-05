@@ -21,7 +21,8 @@ router.get('/newAnnouncement', sendToken, auth, mainCtrl.announcementForm);
 router.post('/newAnnouncement', mainCtrl.createAnnouncement);
 
 router.get('/events', mainCtrl.eventsCtrl);
-router.get('/events/new', mainCtrl.addEventsCtrl);
+router.get('/events/new', sendToken, auth, mainCtrl.addEventsCtrl);
+router.post('/events/new', mainCtrl.submitEvent);
 
 router.get('/register', mainCtrl.registerForm);
 router.post('/register', mainCtrl.registerCtrl);

@@ -13,6 +13,8 @@ router.get('/announcements', mainCtrl.announceList);
 router.get('/announcements/:id', mainCtrl.getAnnounce);
 router.post('/announcements/new', mainCtrl.addAnnounce);
 
+router.post('/events/new', mainCtrl.addEvent);
+
 router.post('/register', authCtrl.register);
 router.post('/login', authCtrl.login);
 

@@ -39,6 +39,17 @@ module.exports.addEventsCtrl = function(req, res) {
 		message: ''
 	});
 };
+module.exports.submitEvent = function(req, res) {
+	
+	var requestOptions = {
+		url: 'http:localhost:3002/api/events/new',
+		method: 'POST',
+		json: {
+			
+		}
+	}
+}
+
 
 module.exports.registerForm = function(req, res) {
 	res.render('register', {message: ''});

@@ -39,11 +39,9 @@ module.exports.announceList = function(req, res) {
 			}
 		});
 };
-
 module.exports.getAnnounce = function(req, res) {
 	
 };
-
 module.exports.addAnnounce = function (req, res) {
 	var newAnnouncement = new announcementsModel({
 		title: req.body.announcement,
@@ -58,3 +56,7 @@ module.exports.addAnnounce = function (req, res) {
 		}
 	});
 };
+
+module.exports.addEvent = function(req, res) {
+	
+}

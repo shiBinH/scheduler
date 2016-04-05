@@ -1,7 +1,7 @@
 extends layout
 
 
-mixin outputMonths()
+mixin outputMonths()//- no longer needed
 	-var months = ['January', 'February','March','April','May','June','July','August','September','October','November','December'];
 	-var thisMonth = (new Date()).getMonth();
 	-for (var i=0; i<12; i++)
@@ -21,14 +21,36 @@ block content
 				input.form-control(type='text')
 			.clearfix
 			.form-group
-				label.col-sm-12 When
+				label.col-sm-12 When:
 					br
 					small.text-muted ie. 4 24 1993
 				.col-sm-2
-					input.form-control.input-sm(type='text', maxlength='2', placeholder='Month')
+					input.form-control.input-sm(type='text', maxlength='2', placeholder='4')
 				.col-sm-2
-					input.form-control.input-sm(type='text', maxlength='2', placeholder='Day')
+					input.form-control.input-sm(type='text', maxlength='2', placeholder='24')
 				.col-sm-2
-					input.form-control.input-sm(type='text', maxlength='4', placeholder=thisYear)
+					input.form-control.input-sm(type='text', maxlength='4', value='1993')
 				.clearfix
-			button.btn.btn-primary(type='submit') Submit
+				label.col-sm-12 at:
+				.col-sm-3
+					input.form-control.input-sm(type='text', maxlength='2', placeholder='1 - 12')
+				.col-sm-1 :
+				.col-sm-3
+					input.form-control.input-sm(type='text', maxlength='2', placeholder='0 - 60')
+				.col-sm-3
+					select.form-control.input-sm(name='morning')
+						option(value='true', selected='selected') AM
+						option(value='false') PM
+				.clearfix
+			.form-group
+				label.col-sm-12(for='capacity') Maximum Number of Participants
+				.col-sm-2
+					input.form-control.input-sm(type='text', name='capacity')
+				.clearfix
+			.form-group
+				label.col-sm-12(for='description') Description
+				.col-sm-12
+					textarea.form-control(name='description')
+			.form-group 
+				.col-sm-12
+					button.btn.btn-primary(type='submit') Submit
