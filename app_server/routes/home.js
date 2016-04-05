@@ -23,6 +23,7 @@ router.post('/newAnnouncement', mainCtrl.createAnnouncement);
 router.get('/events', mainCtrl.eventsCtrl);
 router.get('/events/new', sendToken, auth, mainCtrl.addEventsCtrl);
 router.post('/events/new', mainCtrl.submitEvent);
+router.post('/events/:eventId/join', mainCtrl.joinEvent);
 
 router.get('/register', mainCtrl.registerForm);
 router.post('/register', mainCtrl.registerCtrl);

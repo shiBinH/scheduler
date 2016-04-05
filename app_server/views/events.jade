@@ -4,10 +4,15 @@ mixin getEvents(event)
 	-var isOpen = event.nRegistered < event.capacity;
 	-var localeDate = (new Date(event.time)).toLocaleString();
 	-var when = localeDate.substring(0, localeDate.length - 6) + localeDate.substring(localeDate.length - 2);
+	-var isRegistered = event.participants.indexOf(_id) !== -1;
 	.panel.panel-info
 		.panel-heading
 			h4= event.title
+				if isLoggedIn && !isRegistered && isOpen
+					form(action='/events/' + event._id + '/join', method='post')
+						button.btn.btn-success.pull-right(type='submit') +Join
 			|	When: #{when} 
+			br
 			if isOpen
 				span.label.label-success OPEN
 			else

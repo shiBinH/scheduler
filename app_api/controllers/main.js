@@ -89,4 +89,32 @@ module.exports.addEvent = function(req, res) {
 			res.json(data);
 		}
 	});
-}
+};
+module.exports.joinEvent = function(req, res){
+	eventModel
+		.findById(req.query.eventId)
+		.exec(function(err, event) {
+			if (err) {
+				console.log('@@@@@\n@@@@@ API: Failed to query database\n@@@@@');
+				res.status(400);
+				res.json(err);
+			}
+			else {
+				event.participants.push(req.query.userId);
+				event.nRegistered++;
+				event.save(function(err, data) {
+					if (err) {
+						console.log('@@@@@\n@@@@@	From API: failed to save changes to DB\n@@@@@');
+						res.status(400);
+						res.json(data);
+					}
+					else {
+						console.log('@@@@@\n@@@@@ From API: successfully updated DB\n@@@@@');
+						console.log(data);
+						res.status(200);
+						res.json(data);
+					}
+				});
+			}
+		});
+};

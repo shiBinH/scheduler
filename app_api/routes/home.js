@@ -15,6 +15,7 @@ router.post('/announcements/new', mainCtrl.addAnnounce);
 
 router.get('/events', mainCtrl.eventsList);
 router.post('/events/new', mainCtrl.addEvent);
+router.put('/events/join', mainCtrl.joinEvent);
 
 router.post('/register', authCtrl.register);
 router.post('/login', authCtrl.login);

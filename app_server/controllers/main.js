@@ -35,6 +35,8 @@ module.exports.loginCheck = function(req, res, next) {
 		var payload = JSON.parse(payloadEncoded.toString());
 		res.locals.isLoggedIn = payload.exp > Date.now() / 1000;
 		res.locals.username = payload.login;
+		res.locals._id = payload._id;
+		res.locals.email = payload.email;
 	}
 	next();
 };
@@ -58,6 +60,32 @@ module.exports.announceCtrl = function (req, res) {
 		res.render('announcements', {
 			announcements: body
 		});
+	});
+};
+module.exports.announcementForm = function(req, res) {
+	res.render('addAnnouncement');
+};
+module.exports.createAnnouncement = function(req, res) {
+	var requestOptions = {
+		url: 'http://localhost:3002/api/announcements/new',
+		method: 'POST',
+		json: {
+			announcement: req.body.announcement,
+			author: req.body.author ? req.body.author : undefined,
+			details: req.body.details
+		}
+	};
+
+	request(requestOptions, function(err, response, body) {
+		if(err) res.send('Request Error');
+		else if (response.statusCode===404) {
+		    console.log("invalid token");
+		    res.redirect(req.originalUrl);
+		}
+		else {
+			console.log('Announcement successfully made!');
+			res.redirect(req.originalUrl);
+		}
 	});
 };
 
@@ -117,7 +145,32 @@ module.exports.submitEvent = function(req, res) {
 		}
 		else res.status(400).send('Request error');
 	});
-}
+};
+module.exports.joinEvent = function(req, res) {
+	var requestOptions = {
+		url: 'http://localhost:3002/api/events/join',
+		method: 'PUT',
+		qs: {
+			eventId: req.params.eventId,
+			userId: res.locals._id
+		}
+	};
+	request(requestOptions, function(err, response, body) {
+		if (err) {
+			console.log('@@@\n@@@ Server: Failed to make request\n@@@');
+			res.status(400);
+			res.send(err);
+		}
+		else if (response.statusCode===400) {
+			res.status(400);
+			res.send(body);
+		}
+		else {
+			res.status(200);
+			res.redirect('/events');
+		}
+	});
+};
 
 
 module.exports.registerForm = function(req, res) {
@@ -203,31 +256,4 @@ module.exports.logoutCtrl = function(req, res) {
 	req.session.schedulerToken = null;
 	res.status(200);
 	res.redirect('/');
-};
-
-module.exports.announcementForm = function(req, res) {
-	res.render('addAnnouncement');
-};
-module.exports.createAnnouncement = function(req, res) {
-	var requestOptions = {
-		url: 'http://localhost:3002/api/announcements/new',
-		method: 'POST',
-		json: {
-			announcement: req.body.announcement,
-			author: req.body.author ? req.body.author : undefined,
-			details: req.body.details
-		}
-	};
-
-	request(requestOptions, function(err, response, body) {
-		if(err) res.send('Request Error');
-		else if (response.statusCode===404) {
-		    console.log("invalid token");
-		    res.redirect(req.originalUrl);
-		}
-		else {
-			console.log('Announcement successfully made!');
-			res.redirect(req.originalUrl);
-		}
-	});
 };
