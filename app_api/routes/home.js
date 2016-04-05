@@ -13,6 +13,7 @@ router.get('/announcements', mainCtrl.announceList);
 router.get('/announcements/:id', mainCtrl.getAnnounce);
 router.post('/announcements/new', mainCtrl.addAnnounce);
 
+router.get('/events', mainCtrl.eventsList);
 router.post('/events/new', mainCtrl.addEvent);
 
 router.post('/register', authCtrl.register);

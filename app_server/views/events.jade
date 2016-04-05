@@ -1,35 +1,23 @@
 extends layout
 
+mixin getEvents(event)
+	-var isOpen = event.nRegistered < event.capacity;
+	-var localeDate = (new Date(event.time)).toLocaleString();
+	-var when = localeDate.substring(0, localeDate.length - 6) + localeDate.substring(localeDate.length - 2);
+	.panel.panel-info
+		.panel-heading
+			h4= event.title
+			|	When: #{when} 
+			if isOpen
+				span.label.label-success OPEN
+			else
+				span.label.label-danger CLOSED
+		.panel-body
+			p !{event.description}
+
 block content
 	h2#events-title.col-md-12.text-center
 		a.page-header Events
 	.col-md-10.col-md-offset-1
-		.panel.panel-info
-			.panel-heading
-				h4 League of Bronze B Match #15
-				| Friday, April 1st 8:00 EST 
-				span.label.label-success OPEN
-			.panel-body
-				p A weekly match featuring a standard 5v5 battle on the rift between a team of bronze-silver and a team of gold-plat players.
-		.panel.panel-info
-			.panel-heading
-				h4 League of Bronze A Match #15
-				| Thursday, March 31st 8:00 EST 
-				span.label.label-success OPEN
-			.panel-body
-				p A weekly match featuring a standard 5v5 battle on the rift between a team of gold-plat and a team of plat-diamond players.
-		.panel.panel-info
-			.panel-heading
-				h4 League of Bronze B Match #14
-				| Friday, March 25th 8:00 EST 
-				span.label.label-danger CLOSED
-			.panel-body
-				p A weekly match featuring a standard 5v5 battle on the rift between a team of bronze-silver and a team of gold-plat players.
-		.panel.panel-info
-			.panel-heading
-				h4 League of Bronze A Match #15
-				| Thursday, March 24th 8:00 EST 
-				span.label.label-danger CLOSED
-			.panel-body
-				p A weekly match featuring a standard 5v5 battle on the rift between a team of gold-plat and a team of plat-diamond players.
-		
+		each event in events
+			+getEvents(event)		

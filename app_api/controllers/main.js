@@ -31,11 +31,7 @@ module.exports.announceList = function(req, res) {
 			if (err) console.log(err);
 			else {
 				var announcement = data;
-				var months = ['Jan', 'Feb', 'Mar', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 				res.status(201);
-				for (var i=0; i<announcement.length; i++) {
-					announcement[i].time = formatDate(announcement[i].createdAt);
-				}
 				res.json(announcement);
 			}
 		});
@@ -58,6 +54,24 @@ module.exports.addAnnounce = function (req, res) {
 	});
 };
 
+module.exports.eventsList = function(req, res) {
+	eventModel
+		.find()
+		.exec(function(err, events){
+			if (err) {
+				console.log('DB Error: ' + err);
+				res.status(400);
+				res.json(err);
+			}
+			else {
+				for (var i=0; i<events.length; i++) {
+					
+				}
+				res.status(200);
+				res.json(events);
+			}
+	});
+};
 module.exports.addEvent = function(req, res) {
 	var newEvent = new eventModel({
 		title: req.body.title,

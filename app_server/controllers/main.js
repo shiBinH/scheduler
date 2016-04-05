@@ -50,8 +50,11 @@ module.exports.announceCtrl = function (req, res) {
 		json: {}
 	};
 	request(requestOptions, function(err, response, body) {
-		if(err) console.log(err);
-		console.log('@@@@@@@@@@@@\n @@@@@@@@@@@		Get request successful\n @@@@@@@@@@');
+		if(err) {
+			console.log(err);
+			res.status(400);
+			res.send('@@@@@\n@@@@		Request Error\n@@@@@')
+		}
 		res.render('announcements', {
 			announcements: body
 		});
@@ -59,7 +62,23 @@ module.exports.announceCtrl = function (req, res) {
 };
 
 module.exports.eventsCtrl = function(req, res) {
-	res.render('events');
+	var requestOptions = {
+		url: 'http://localhost:3002/api/events',
+		method: 'GET',
+		json: {}
+	};
+	request(requestOptions, function(err, response, body){
+		if(response.statusCode===400) {
+			res.status(400);
+			res.send(body);
+		}
+		else {
+			res.status(200);
+			res.render('events', {
+				events: body
+			});
+		}
+	});
 };
 module.exports.addEventsCtrl = function(req, res) {
 	res.status(200);
