@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var announcementsModel = mongoose.model('announcements');
+var eventModel = mongoose.model('events');
 
 var formatDate = function (date) {
   var months = ['Jan', 'Feb', 'Mar','Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -58,5 +59,20 @@ module.exports.addAnnounce = function (req, res) {
 };
 
 module.exports.addEvent = function(req, res) {
-	
+	var newEvent = new eventModel({
+		title: req.body.title,
+		description: req.body.description,
+		time: req.body.time,
+		capacity: req.body.capacity
+	});
+	newEvent.save(function(err, data) {
+		if(err) {
+			res.status(400);
+			res.json(err);
+		}
+		else {
+			res.status(201);
+			res.json(data);
+		}
+	});
 }

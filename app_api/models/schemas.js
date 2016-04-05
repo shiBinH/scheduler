@@ -13,11 +13,15 @@ var eventSchema = new mongoose.Schema({
 	title: {type: String, required: true},
 	time: {type: Date, required: true},
 	description: String,
+	capacity: {
+		type: Number,
+		required: true
+	},
 	nRegistered: {
 		type: Number,
 		default: 0,
-	},
-	open: {type: Boolean, default: true}
+		max: 10
+	}
 });
 
 mongoose.model('announcements', announcementSchema);

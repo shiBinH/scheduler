@@ -1,5 +1,33 @@
 var request = require('request');
 
+var validDate = function(req) {
+	var month = req.body.month;
+	var day = req.body.day;
+	var year = req.body.year;
+	if (month!==2) {
+		if(day>29) return false;
+		if (day===29 && year%4!==0) return false;
+		return true;
+	}
+	else if (day===31 && (month!==1 && month!==3 && month!==5 && month!==7 && month!==8 && month!==10 && month!==12)) {
+		return false;
+	}
+	return true;
+};
+
+var formatDate = function(body) {
+	var hour;
+	if (body.morning==='true') {
+		if (body.hour===12) hour = 0;
+		else hour = body.hour;
+	}
+	else {
+		if (body.hour!==12) hour = body.hour + 12;
+		else hour = body.hour;
+	}
+	return new Date(body.year, body.month-1, body.day, hour, body.minute);
+};
+
 module.exports.loginCheck = function(req, res, next) {
 	var token = req.session.schedulerToken;
 	if (token) {
@@ -40,14 +68,36 @@ module.exports.addEventsCtrl = function(req, res) {
 	});
 };
 module.exports.submitEvent = function(req, res) {
-	
+	if (!validDate(req)) {
+		res.render('eventsForm', {
+			message: 'Invalid date'
+		});
+	}
+	var eventTime = formatDate(req.body);
 	var requestOptions = {
-		url: 'http:localhost:3002/api/events/new',
+		url: 'http://localhost:3002/api/events/new',
 		method: 'POST',
 		json: {
-			
+			title: req.body.title,
+			time: eventTime,
+			description: req.body.description,
+			capacity: req.body.capacity
 		}
-	}
+	};
+	request(requestOptions, function(err, response, body) {
+		if (response.statusCode===201) {
+			console.log('@@@@@\n@@@@@		Event successfully created\n@@@@@');
+			res.render('eventsForm', {
+				message: 'Event successfully created!'
+			});
+		}
+		else if (response.statusCode===400) {
+			console.log(body);
+			res.status(400);
+			res.send('DB error creating event');
+		}
+		else res.status(400).send('Request error');
+	});
 }
 
 

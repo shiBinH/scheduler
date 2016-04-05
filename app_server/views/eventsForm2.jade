@@ -14,30 +14,29 @@ block content
 	-var thisYear = (new Date()).getFullYear();
 	h2#newEvent.col-md-12.text-center
 		a.page-header Add an Event
-	.col-md-8.col-md-offset-2.text-danger.text-center #{message}
 	.col-md-8.col-md-offset-2
 		form(action='', method='post')
 			.form-group.col-sm-9
 				label(for='title') Event Name
-				input.form-control(type='text', name='title', required='required')
+				input.form-control(type='text')
 			.clearfix
 			.form-group
 				label.col-sm-12 When:
 					br
-					small.text-muted ie. 4/24/1993
+					small.text-muted ie. 4 24 1993
 				.col-sm-2
-					input.form-control.input-sm.text-center(type='number', name='month', min='1', max='12', placeholder='4', required='required')
+					input.form-control.input-sm(type='text', maxlength='2', placeholder='4')
 				.col-sm-2
-					input.form-control.input-sm.text-center(type='number', name='day', min='1', max='31', placeholder='24', required='required')
-				.col-sm-3
-					input.form-control.input-sm.text-center(type='number', name='year', min=thisYear, placeholder='1993', required='required')
+					input.form-control.input-sm(type='text', maxlength='2', placeholder='24')
+				.col-sm-2
+					input.form-control.input-sm(type='text', maxlength='4', value='1993')
 				.clearfix
 				label.col-sm-12 at:
 				.col-sm-3
-					input.form-control.input-sm.text-center(type='number', name='hour', min='1', max='12', placeholder='1 - 12', required='required')
+					input.form-control.input-sm(type='text', maxlength='2', placeholder='1 - 12')
 				.col-sm-1 :
 				.col-sm-3
-					input.form-control.input-sm.text-center(type='number', name='minute', min='0', max='59', placeholder='0 - 59', required='required')
+					input.form-control.input-sm(type='text', maxlength='2', placeholder='0 - 60')
 				.col-sm-3
 					select.form-control.input-sm(name='morning')
 						option(value='true', selected='selected') AM
@@ -46,12 +45,12 @@ block content
 			.form-group
 				label.col-sm-12(for='capacity') Maximum Number of Participants
 				.col-sm-2
-					input.form-control.input-sm(type='number', min='1', name='capacity', required='required')
+					input.form-control.input-sm(type='text', name='capacity')
 				.clearfix
 			.form-group
 				label.col-sm-12(for='description') Description
 				.col-sm-12
 					textarea.form-control(name='description')
 			.form-group 
-				.col-sm-12.text-center
+				.col-sm-12
 					button.btn.btn-primary(type='submit') Submit
