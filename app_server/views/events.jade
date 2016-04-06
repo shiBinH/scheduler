@@ -1,7 +1,7 @@
 extends layout
 
 mixin getEvents(event)
-	-var isOpen = event.nRegistered < event.capacity;
+	-var isOpen = event.nRegistered < event.capacity && (new Date(event.time)).getTime() > Date.now();
 	-var localeDate = (new Date(event.time)).toLocaleString();
 	-var when = localeDate.substring(0, localeDate.length - 6) + localeDate.substring(localeDate.length - 2);
 	-var isRegistered = event.participants.indexOf(_id) !== -1;
@@ -11,6 +11,11 @@ mixin getEvents(event)
 				if isLoggedIn && !isRegistered && isOpen
 					form(action='/events/' + event._id + '/join', method='post')
 						button.btn.btn-success.pull-right(type='submit') +Join
+				else if isLoggedIn && isRegistered
+					form.pull-right(action='/events/' + event._id + '/cancel', method='post')
+						label.small You've joined this event 
+						br
+						button.btn.btn-default.pull-right(type='submit') Cancel
 			|	When: #{when} 
 			br
 			if isOpen
@@ -23,6 +28,7 @@ mixin getEvents(event)
 block content
 	h2#events-title.col-md-12.text-center
 		a.page-header Events
+	.col-md-8.col-md-offset-2.text-danger.text-center #{message}
 	.col-md-10.col-md-offset-1
 		each event in events
 			+getEvents(event)		

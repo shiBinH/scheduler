@@ -7,23 +7,20 @@ var auth = jwt({
     secret: process.env.JWT_SECRET,
     userProperty: 'payload'
 })
-var sendToken = function (req, res, next) {
-	req.headers['authorization'] = 'Bearer ' + req.session.schedulerToken;
-	next();
-};
 
 router.use(mainCtrl.loginCheck);
 
 router.get('/', mainCtrl.homeCtrl);
 
 router.get('/announcements', mainCtrl.announceCtrl);
-router.get('/newAnnouncement', sendToken, auth, mainCtrl.announcementForm);
-router.post('/newAnnouncement', mainCtrl.createAnnouncement);
+router.get('/announcements/new', auth, mainCtrl.announcementForm);
+router.post('/announcements/new', mainCtrl.createAnnouncement);
 
 router.get('/events', mainCtrl.eventsCtrl);
-router.get('/events/new', sendToken, auth, mainCtrl.addEventsCtrl);
+router.get('/events/new', auth, mainCtrl.addEventsCtrl);
 router.post('/events/new', mainCtrl.submitEvent);
 router.post('/events/:eventId/join', mainCtrl.joinEvent);
+router.post('/events/:eventId/cancel', mainCtrl.unjoinEvent);
 
 router.get('/register', mainCtrl.registerForm);
 router.post('/register', mainCtrl.registerCtrl);

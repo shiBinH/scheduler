@@ -16,14 +16,17 @@ var eventSchema = new Schema({
 	description: String,
 	capacity: {
 		type: Number,
-		required: true
+		default: 999999999
 	},
 	nRegistered: {
 		type: Number,
 		default: 0,
 		max: 10
 	},
-	participants: [Schema.Types.ObjectId]
+	participants: {
+		type: [Schema.Types.ObjectId],
+		unique: false
+	}
 });
 
 mongoose.model('announcements', announcementSchema);

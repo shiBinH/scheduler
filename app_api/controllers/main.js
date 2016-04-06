@@ -77,7 +77,7 @@ module.exports.addEvent = function(req, res) {
 		title: req.body.title,
 		description: req.body.description,
 		time: req.body.time,
-		capacity: req.body.capacity
+		capacity: req.body.capacity ? req.body.capacity : undefined
 	});
 	newEvent.save(function(err, data) {
 		if(err) {
@@ -99,6 +99,13 @@ module.exports.joinEvent = function(req, res){
 				res.status(400);
 				res.json(err);
 			}
+			if (event.nRegistered===event.capacity) {
+				console.log('@@@@@\n@@@@@ API: Event Full\n@@@@@')
+				res.status(304);
+				res.json({
+					full: true
+				});
+			}
 			else {
 				event.participants.push(req.query.userId);
 				event.nRegistered++;
@@ -117,4 +124,25 @@ module.exports.joinEvent = function(req, res){
 				});
 			}
 		});
+};
+module.exports.unjoinEvent = function(req, res) {
+	eventModel.update({_id: req.query.eventId}, {
+		$pull: {//$pull removes elements from an array matching a condition
+			participants: req.query.userId
+		},
+		$inc: {
+			nRegistered: -1
+		}
+	}, function(err, response) {//response is the "full resposne from mongo"
+		if (err) {
+			console.log('@@@@@\n@@@@@\tDB Error:\n@@@@@');
+			res.status(400);
+			res.json(err);
+		}
+		else {
+			console.log('@@@@@\n@@@@@\tSuccessfully updated\n@@@@@')
+			res.status(200);
+			res.json(response);
+		}
+	});
 };

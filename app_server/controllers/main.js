@@ -38,6 +38,8 @@ module.exports.loginCheck = function(req, res, next) {
 		res.locals._id = payload._id;
 		res.locals.email = payload.email;
 	}
+	req.headers['authorization'] = 'Bearer ' + token;
+	res.locals.hostname = 'http://' + req.hostname + ':3002';
 	next();
 };
 
@@ -66,6 +68,7 @@ module.exports.announcementForm = function(req, res) {
 	res.render('addAnnouncement');
 };
 module.exports.createAnnouncement = function(req, res) {
+	var tokenHeader = 'Bearer ' + req.session.schedulerToken;
 	var requestOptions = {
 		url: 'http://localhost:3002/api/announcements/new',
 		method: 'POST',
@@ -165,13 +168,61 @@ module.exports.joinEvent = function(req, res) {
 			res.status(400);
 			res.send(body);
 		}
+		else if (response.statusCode===304) {//unwieldy
+			var requestOptions = {
+				url: 'http://localhost:3002/api/events',
+				method: 'GET',
+				json: {}
+			};
+			request(requestOptions, function(err, response, body){
+				if(response.statusCode===400) {
+					res.status(400);
+					res.send(body);
+				}
+				else {
+					res.status(200);
+					res.render('events', {
+						message: 'Event is full',
+						events: body
+					});
+				}
+			});
+		}
 		else {
 			res.status(200);
 			res.redirect('/events');
 		}
 	});
 };
-
+module.exports.unjoinEvent = function(req, res) {
+	var requestOptions = {
+		url: 'http://localhost:3002/api/events/cancel',
+		method: 'PUT',
+		qs: {
+			eventId: req.params.eventId,
+			userId: res.locals._id
+		}
+	};
+	request(requestOptions, function(err, response, body) {
+		if(err) {
+			console.log('@@@@@\n@@@@@\tServer: Request Error\n@@@@@');
+			console.log(err);
+			res.status(400);
+			res.send('Server: Request Error');
+		}
+		else if (response.statusCode===400) {
+			console.log(response);
+			console.log(body);
+			res.status(304);
+			res.send('Could not cancel');
+		}
+		else {
+			console.log(body);
+			res.status(200);
+			res.redirect('/events');
+		}
+	});
+}
 
 module.exports.registerForm = function(req, res) {
 	res.render('register', {message: ''});
@@ -246,8 +297,8 @@ module.exports.loginCtrl = function(req, res) {
 		}
 		else {
 			req.session.schedulerToken = body.token;
-			res.status(200);
 			console.log('@@@@@\n@@@@@	Successfully logged in!\n@@@@@')
+			res.status(200);
 			res.redirect('/');
 		}
 	});
