@@ -6,7 +6,11 @@ var userSchema = new mongoose.Schema({
   login: {type: String, unique: true, required: true},
   email: {type: String, unique: true, required: true},
   hash: String,
-  salt: String
+  salt: String,
+	events: {
+		eventId: mongoose.Schema.Types.ObjectId,
+		eventName: String
+	}
 });
 
 userSchema.methods.setPassword = function(password) {
@@ -30,5 +34,9 @@ userSchema.methods.generateJwt = function() {
       exp: parseInt(expirationDate.getTime() / 1000)
   }, process.env.JWT_SECRET);
 };
+
+userSchema.methods.addEvent = function(eventId) {
+	
+}
 
 mongoose.model('User', userSchema);

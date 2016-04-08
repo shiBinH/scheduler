@@ -44,10 +44,19 @@ block content
 						option(value='false') PM
 				.clearfix
 			.form-group
+				label.col-sm-12(for='location') Where:
+				br
+				.col-sm-10
+					input.form-control.input-sm(type='text', name='location')
+			.form-group
 				label.col-sm-12(for='capacity') Maximum Number of Participants
 				.col-sm-2
 					input.form-control.input-sm(type='number', min='1', name='capacity')
 				.clearfix
+			.form-group
+				label.col-sm-12(for='summary') Summary
+				.col-sm-8
+					input.form-control.input-sm(type='text', name='summary', placeholder='Display text on events list page')
 			.form-group
 				label.col-sm-12(for='description') Description
 				.col-sm-12

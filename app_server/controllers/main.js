@@ -22,10 +22,10 @@ var formatDate = function(body) {
 		else hour = body.hour;
 	}
 	else {
-		if (body.hour!==12) hour = body.hour + 12;
+		if (body.hour!==12) hour = parseInt(body.hour) + 12;
 		else hour = body.hour;
 	}
-	return new Date(body.year, body.month-1, body.day, hour, body.minute);
+	return new Date(body.year, body.month - 1, body.day, hour, body.minute);
 };
 
 module.exports.loginCheck = function(req, res, next) {
@@ -70,9 +70,13 @@ module.exports.announcementForm = function(req, res) {
 module.exports.createAnnouncement = function(req, res) {
 	var tokenHeader = 'Bearer ' + req.session.schedulerToken;
 	var requestOptions = {
-		url: 'http://localhost:3002/api/announcements/new',
+		url: res.locals.hostname + '/api/announcements/new',
 		method: 'POST',
+		headers: {
+			token: tokenHeader
+		},
 		json: {
+			summary: req.body.summary,
 			announcement: req.body.announcement,
 			author: req.body.author ? req.body.author : undefined,
 			details: req.body.details
@@ -86,10 +90,36 @@ module.exports.createAnnouncement = function(req, res) {
 		    res.redirect(req.originalUrl);
 		}
 		else {
-			console.log('Announcement successfully made!');
+			console.log('@@@@@\n@@@@@\tAnnouncement successfully made!\n@@@@@');
 			res.redirect(req.originalUrl);
 		}
 	});
+};
+module.exports.getAnnouncement = function(req, res) {
+	var requestOptions = {
+		url: res.locals.hostname + '/api/announcements/' + req.params.announcementId,
+		method: 'GET',
+		json: {}
+	};
+	request(requestOptions, function(err, response, body) {
+		if (err) {
+			console.log(err);
+			res.status(400);
+			res.send('Request error');
+		}
+		else if (response.statusCode===200) {
+			console.log(body);
+			res.status(200);
+			res.render('announcementPage', {
+				announcement: body
+			});
+		}
+		else {
+			console.log(body);
+			res.status(400);
+			res.send('Error');
+		}
+ 	});
 };
 
 module.exports.eventsCtrl = function(req, res) {
@@ -129,7 +159,9 @@ module.exports.submitEvent = function(req, res) {
 		method: 'POST',
 		json: {
 			title: req.body.title,
+			summary: req.body.summary,
 			time: eventTime,
+			location: req.body.location,
 			description: req.body.description,
 			capacity: req.body.capacity
 		}
@@ -168,7 +200,7 @@ module.exports.joinEvent = function(req, res) {
 			res.status(400);
 			res.send(body);
 		}
-		else if (response.statusCode===304) {//unwieldy
+		else if (response.statusCode===304) {//needs ajax implementation of this
 			var requestOptions = {
 				url: 'http://localhost:3002/api/events',
 				method: 'GET',
@@ -220,6 +252,31 @@ module.exports.unjoinEvent = function(req, res) {
 			console.log(body);
 			res.status(200);
 			res.redirect('/events');
+		}
+	});
+}
+module.exports.getEvent = function(req, res) {
+	var requestOptions = {
+		url: res.locals.hostname + '/api/events/' + req.params.eventId,
+		method: 'get',
+		json: {}
+	};
+	request(requestOptions, function(err, response, body) {
+		if (err) {
+			console.log('request error');
+			res.status(400);
+			res.send(err);
+		}
+		else if (response.statusCode===200) {
+			res.status(200);
+			res.render('eventPage', {
+				event: body
+			});
+		}
+		else {
+			console.log(body);
+			res.status(400);
+			res.send(response);
 		}
 	});
 }

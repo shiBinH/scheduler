@@ -26,21 +26,40 @@ var formatDate = function (date) {
 
 module.exports.announceList = function(req, res) {
 	announcementsModel
-		.find()
+		.find({}, null, {sort:{createdAt:-1}, limit: 5}, //3rd param takes mongdb cursor methods
+			function(err, data) {
+				if(err) console.log(err);
+				else {
+					var announcement = data;
+					var months = ['Jan', 'Feb', 'Mar', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+					for (var i=0; i<announcement.length; i++) {
+						announcement[i].time = formatDate(announcement[i].createdAt);
+					}
+					res.status(200);
+					res.json(announcement);
+			}}
+		);
+};
+module.exports.getAnnounce = function(req, res) {
+	announcementsModel
+		.findOne({_id: req.params.id})
 		.exec(function(err, data) {
-			if (err) console.log(err);
+			if (err) {
+				console.log('\n\t\tDB Error\n')
+				res.status(400);
+				res.json(err);
+			}
 			else {
-				var announcement = data;
-				res.status(201);
-				res.json(announcement);
+				console.log('\n\t\tQuery was successful!\n');
+				data.time = formatDate(data.createdAt);
+				res.status(200);
+				res.json(data);
 			}
 		});
 };
-module.exports.getAnnounce = function(req, res) {
-	
-};
 module.exports.addAnnounce = function (req, res) {
 	var newAnnouncement = new announcementsModel({
+		summary: req.body.summary,
 		title: req.body.announcement,
 		description: req.body.details,
 		author: req.body.author
@@ -57,6 +76,7 @@ module.exports.addAnnounce = function (req, res) {
 module.exports.eventsList = function(req, res) {
 	eventModel
 		.find()
+		.sort({time: -1})
 		.exec(function(err, events){
 			if (err) {
 				console.log('DB Error: ' + err);
@@ -64,18 +84,17 @@ module.exports.eventsList = function(req, res) {
 				res.json(err);
 			}
 			else {
-				for (var i=0; i<events.length; i++) {
-					
-				}
 				res.status(200);
 				res.json(events);
 			}
-	});
-};
+		});
+};//chaining sort() to find()
 module.exports.addEvent = function(req, res) {
 	var newEvent = new eventModel({
 		title: req.body.title,
+		summary: req.body.summary,
 		description: req.body.description,
+		location: req.body.location,
 		time: req.body.time,
 		capacity: req.body.capacity ? req.body.capacity : undefined
 	});
@@ -145,4 +164,19 @@ module.exports.unjoinEvent = function(req, res) {
 			res.json(response);
 		}
 	});
+};
+module.exports.getEvent = function(req, res) {
+	eventModel
+		.findOne({_id: req.params.eventId})
+		.exec(function(err, data) {
+			if (err) {
+				console.log('DB Search error');
+				res.status(400);
+				res.json(err);
+			}
+			else {
+				res.status(200);
+				res.json(data);
+			}
+		});
 };

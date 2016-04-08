@@ -46,7 +46,7 @@ app.use(function(req, res, next) {
 app.use(function(err, req, res, next) {
   if (err.name === 'UnauthorizedError') {
     res.status(401);
-    console.log("@@@@@@@@@@@@Authorization failed");
+    console.log('@@@@@\n@@@@@\tAuthorization Failed\n@@@@@');
     res.redirect('/');
   }
 });

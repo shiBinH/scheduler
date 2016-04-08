@@ -1,34 +1,34 @@
 extends layout
 
-mixin getEvents(event)
-	-var isOpen = event.nRegistered < event.capacity && (new Date(event.time)).getTime() > Date.now();
+mixin getEvents2(event)
+	-var isOpen = event.nRegistered < event.capacity;
+	-var isOver = (new Date(event.time)).getTime() < Date.now();
 	-var localeDate = (new Date(event.time)).toLocaleString();
 	-var when = localeDate.substring(0, localeDate.length - 6) + localeDate.substring(localeDate.length - 2);
-	-var isRegistered = event.participants.indexOf(_id) !== -1;
-	.panel.panel-info
-		.panel-heading
-			h4= event.title
-				if isLoggedIn && !isRegistered && isOpen
-					form(action='/events/' + event._id + '/join', method='post')
-						button.btn.btn-success.pull-right(type='submit') +Join
-				else if isLoggedIn && isRegistered
-					form.pull-right(action='/events/' + event._id + '/cancel', method='post')
-						label.small You've joined this event 
-						br
-						button.btn.btn-default.pull-right(type='submit') Cancel
-			|	When: #{when} 
+	a.list-group-item(href=hostname + '/events/'+event._id+'/'+event.title)
+		h2.text-primary= event.title
+			small
+				if isOver
+					span.label.label-danger.pull-right Event Over
+				else if isOpen
+					span.label.label-success.pull-right Open
+				else
+					span.label.label-danger.pull-right CLOSED
+		hr
+		p.col-sm-8
+			|	When: #{when}
 			br
-			if isOpen
-				span.label.label-success OPEN
-			else
-				span.label.label-danger CLOSED
-		.panel-body
-			p !{event.description}
-
+			|	Where: #{event.location}
+			br
+			i
+				b Description: 
+			.col-sm-5.col-sm-offset-1	#{event.summary}
+			.clearfix
 block content
 	h2#events-title.col-md-12.text-center
 		a.page-header Events
 	.col-md-8.col-md-offset-2.text-danger.text-center #{message}
-	.col-md-10.col-md-offset-1
-		each event in events
-			+getEvents(event)		
+	#eventsList.col-md-10.col-md-offset-1
+		.list-group
+			each event in events
+				+getEvents2(event)

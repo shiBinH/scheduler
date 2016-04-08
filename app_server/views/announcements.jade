@@ -1,21 +1,20 @@
 extends layout
-
-mixin addAnnouncement(title, description, author, time)
-	.panel.panel-success
-		.panel-heading
-			h4= title
-		.panel-body
-			!{description}
-			footer.text-muted.text-right
-				small
-					|	#{author}
-					br
-					| #{time}
+mixin addAnnouncement(announcement)
+	a.list-group-item(href=hostname+'/announcements/'+announcement._id+'/'+announcement.title)
+		h2.text-primary= announcement.title
+		hr
+		p.col-sm-4= announcement.summary
+		footer.text-muted.text-right.pull-right.col-sm-3
+			small
+				|	#{announcement.author}
+				br
+				|	#{announcement.time}
+		.clearfix
 
 block content
 	h2#announcements-title.col-md-12.text-center
-		a
-			big.page-header Announcements
-	.col-md-10.col-md-offset-1
-		each announcement in announcements
-			+addAnnouncement(announcement.title, announcement.description, announcement.author, announcement.time)
+		a.page-header Announcements
+	#announcements-list.col-md-10.col-md-offset-1
+		.list-group
+			each announcement in announcements
+				+addAnnouncement(announcement)

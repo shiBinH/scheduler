@@ -8,12 +8,12 @@ html
 		title Scheduler
 		script(src='//cdn.tinymce.com/4/tinymce.min.js')
 		script tinymce.init({ selector:'textarea' });
-	body
+	body#body
 		.container
 			.row
 				header.col-sm-12
 					h1.page-header.text-center
-						a#title(href='') Scheduler 
+						a#title(href=hostname) Scheduler 
 		nav.navbar.navbar-default.navbar-fixed-top.navbar-inverse
 			.container
 				.navbar-header
@@ -29,12 +29,12 @@ html
 							a(href=hostname + '/announcements') ANNOUNCEMENTS
 						li
 							a(href=hostname + '/events') EVENTS
-						li
-							a(href=hostname + '/register') REGISTER
 					if !isLoggedIn
 						form.navbar-form.navbar-right(action='/login', method='get')
 							.form-group
-								button.btn.btn-primary(type='submit') Login
+								button.btn.btn-secondary.input-sm(type='submit', formaction='/register', method='get') Register
+							.form-group
+								button.btn.btn-primary.input-sm(type='submit') Login
 					else
 						ul.nav.navbar-nav.navbar-right
 							li 
@@ -44,7 +44,7 @@ html
 									button.btn.btn-default(type='submit') Logout
 		.container
 			.row
-				.well.col-md-10.col-md-offset-1
+				.col-md-10.col-md-offset-1
 					block content
 				.clearfix
 		.container
@@ -56,6 +56,7 @@ html
 						| sh2581@nyu.edu
 						br
 						|	github.com/shiBinH
+				.clearfix
 		script(src='/javascripts/jquery-2.2.0.min.js')
 		script(src='/bootstrap/js/bootstrap.min.js')
 

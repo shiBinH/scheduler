@@ -6,17 +6,21 @@ block content
 	.col-md-10.col-md-offset-1
 		form.form-horizontal(action='', method='post')
 			.form-group
-				label.control-label.col-xs-2(for='announcement') Announcement
-				.col-xs-10
+				label.control-label.col-sm-2(for='announcement') Announcement
+				.col-sm-10
 					input.form-control(type='text', name='announcement')
 			.form-group
-				label.control-label.col-xs-2(for='author') Author
-				.col-xs-3
+				label.control-label.col-sm-2(for='author') Author
+				.col-sm-3
 					input.form-control(type='text', name='author')
 			.form-group
-				label.control-label.col-xs-2(for='details') Details
-				.col-xs-10
+				label.control-label.col-sm-2(for='summary') Summary
+				.col-sm-8
+					input.form-control(type='text', name='summary', placeholder='This will be displayed on the announcement list page', required='required')
+			.form-group
+				label.control-label.col-sm-2(for='details') Details
+				.col-sm-10
 					textarea.form-control(name='details', wrap='hard', col='20')			
 			.form-group
-				.col-xs-2.col-xs-offset-10
+				.col-sm-2.col-sm-offset-10
 					button.btn.btn-primary(type='submit') Submit

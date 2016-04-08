@@ -1,0 +1,61 @@
+extends layout
+
+block content
+	-var isOpen = event.nRegistered < event.capacity;
+	-var isOver = (new Date(event.time)).getTime() < Date.now();
+	-var localeDate = (new Date(event.time)).toLocaleString();
+	-var when = localeDate.substring(0, localeDate.length - 6) + localeDate.substring(localeDate.length - 2);
+	-var isRegistered = event.participants.indexOf(username)!==-1;
+	#eventPage.well.col-sm-12
+		.col-sm-12
+			h2.col-sm-12.text-primary= event.title
+			.clearfix
+			p.col-sm-5
+				|	When: #{when}
+				br
+				|	Where: #{event.location}
+				br
+				if isOver
+					span.label.label-danger Event Over
+				else if isOpen
+					span.label.label-success Open
+				else
+					span.label.label-danger CLOSED
+			form.col-sm-3.text-right.pull-right(action='', method='post')
+				button.btn.btn-success(type='submit') Join
+			.clearfix
+		.clearfix
+		hr
+		.col-sm-8
+			h4.col-sm-12
+				b Description:
+			.col-sm-11.col-sm-offset-1
+				!{event.description}
+		.col-sm-4
+			.row
+				.col-sm-12 
+					h4 Players
+					ul.list-group
+						li.list-group-item Player 1
+						li.list-group-item Player 2
+		.clearfix
+		hr
+		#comments.col-sm-8
+			h3 Comments
+			ul.list-group
+				li.list-group-item
+					a
+						i Amazon SDE 3:
+					p
+						small.text-muted Magnificent Website
+				li.list-group-item
+					a
+						i Principle Software Engineer @Google:
+					p 
+						small.text-muted Scheduler is incredible
+				li.list-group-item
+					a
+						i Shi Wen:
+					p.text-muted
+						small God did a great job here
+		.clearfix
