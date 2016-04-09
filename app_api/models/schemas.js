@@ -24,13 +24,20 @@ var eventSchema = new Schema({
 	nRegistered: {
 		type: Number,
 		default: 0,
-		max: 10
+		min: 0
 	},
-	participants: {
-		type: String,
-		unique: true
-	}
+	participants: [{
+		role: String
+	}]
 });
+
+eventSchema.methods.add = function(participant) {
+	this.participants.push(participant);
+	this.fixNRegistered();
+};
+eventSchema.methods.fixNRegistered = function() {
+	this.nRegistered = this.participants.length;
+};
 
 mongoose.model('announcements', announcementSchema);
 mongoose.model('events', eventSchema);

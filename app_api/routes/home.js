@@ -20,8 +20,8 @@ router.post('/announcements/new', auth, mainCtrl.addAnnounce);
 
 router.get('/events', mainCtrl.eventsList);
 router.post('/events/new', mainCtrl.addEvent);
-router.put('/events/join', mainCtrl.joinEvent);
-router.put('/events/cancel', mainCtrl.unjoinEvent);
+router.put('/events/:eventId/join', mainCtrl.joinEvent);
+router.put('/events/:eventId/cancel', mainCtrl.unjoinEvent);
 router.get('/events/:eventId', mainCtrl.getEvent);
 
 router.post('/register', authCtrl.register);

@@ -1,25 +1,87 @@
-module.exports.announceCtrl = function (req, res) {
-	res.render('announcements', {
-		announcements: [{
-			title: 'Reminder',
-			description: 'Attention!! Please fill in the fields when registering. Thank you!',
-			author: 'Admin',
-			time: 'March 24th, 2016'
-		}, {
-			title: 'Announcement 3',
-			description: 'Listen up all!!! This is the third announcement since god created this website. Please check the announcements tab for past announcements and the games tab for upcoming/past games.',
-			author: 'Admin',
-			time: 'March 24th, 2016'
-		}, {
-			title: 'Announcement 2',
-			description: 'Listen up all!!! This is the second announcement since god created this website. Please check the announcements tab for past announcements and the games tab for upcoming/past games.',
-			author: 'Admin',
-			time: 'March 23rd, 2016',
-		}, {
-			title: 'Welcome!',
-			description: 'God created this website on the 3rd day.',
-			author: 'Admin',
-			time: 'March 22nd, 2016'
-		}]
+userModel
+	.update(
+		{id: req.query.userId}, 
+		{$addToSet: {events: req.params.eventId}},
+		function(err, response) {
+			if (err) {
+				console.log('\n\tDB Error\n');
+				res.status(400);
+				res.json(err);
+			} else {
+				console.log('\n\tSuccessfully updated user\n');
+			}
+		}
+	)
+eventModel
+	.update(
+		{id: req.params.eventId}, 
+		{$addToSet: {
+				participants: {id: req.query.userId} 
+			},
+		}
+		function (err, response) {
+			if (err) {
+				console.log('\n\tDB Error\n');
+				res.status(400);
+				res.json(err);
+			} else {
+				console.log('\n\tSuccessfully updated event');
+				res.status(200);
+				res.json(response);
+			}
+		});
+eventModel
+	.find({id: req.params.evenId})
+	.exec(function(err, event){
+					event.fixNRegistered();
+				}
+	);
+//
+userModel
+		.update({id: req.query._id}, {
+			$addToSet: {
+				events: req.params.eventId
+			}
+	}, function(err, response){
+				if (err) {
+					console.log('@@@@@\n@@@@@\tDB Error:\n@@@@@');
+				}
+				else {
+					console.log('@@@@@\n@@@@@\tSuccessfully updated\n@@@@@')
+				}
 	});
-};
+	eventModel
+		.findById(req.params.eventId)
+		.exec(function(err, event) {
+			if (err) {
+				console.log('@@@@@\n@@@@@ API: Failed to query database\n@@@@@');
+				res.status(400);
+				res.json(err);
+				return;
+			}
+			if (event.nRegistered===event.capacity) {
+				console.log('@@@@@\n@@@@@ API: Event Full\n@@@@@')
+				res.status(304);
+				res.json({
+					full: true
+				});
+			}
+			else {
+				event.add({//need to add role
+					id: req.query.userId
+				});
+				event.save(function(err, data) {
+					if (err) {
+						console.log('@@@@@\n@@@@@	From API: failed to save changes to DB\n@@@@@');
+						res.status(400);
+						res.json(data);
+					}
+					else {
+						console.log('@@@@@\n@@@@@ From API: successfully updated DB\n@@@@@');
+						console.log(data);
+						res.status(200);
+						res.json(data);
+					}
+				});
+			}
+		});

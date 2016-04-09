@@ -22,7 +22,7 @@ router.get('/events/new', auth, mainCtrl.addEventsCtrl);
 router.post('/events/new', mainCtrl.submitEvent);
 router.post('/events/:eventId/join', mainCtrl.joinEvent);
 router.post('/events/:eventId/cancel', mainCtrl.unjoinEvent);
-router.get('/events/:eventId/:eventName', mainCtrl.getEvent);
+router.get('/events/:eventId', mainCtrl.getEvent);
 
 router.get('/register', mainCtrl.registerForm);
 router.post('/register', mainCtrl.registerCtrl);

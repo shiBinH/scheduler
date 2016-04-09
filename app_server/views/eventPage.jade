@@ -5,7 +5,7 @@ block content
 	-var isOver = (new Date(event.time)).getTime() < Date.now();
 	-var localeDate = (new Date(event.time)).toLocaleString();
 	-var when = localeDate.substring(0, localeDate.length - 6) + localeDate.substring(localeDate.length - 2);
-	-var isRegistered = event.participants.indexOf(username)!==-1;
+	-var isRegistered = participant;
 	#eventPage.well.col-sm-12
 		.col-sm-12
 			h2.col-sm-12.text-primary= event.title
@@ -21,8 +21,14 @@ block content
 					span.label.label-success Open
 				else
 					span.label.label-danger CLOSED
-			form.col-sm-3.text-right.pull-right(action='', method='post')
-				button.btn.btn-success(type='submit') Join
+			if isLoggedIn && !isOver
+				if isOpen && !isRegistered
+					form.col-sm-3.text-right.pull-right(action=hostname+'/events/'+event._id+'/join', method='post')
+						button.btn.btn-success(type='submit') Join
+				else if isRegistered
+					form.col-sm-4.text-right.pull-right(action=hostname+'/events/'+event._id+'/cancel', method='post')
+						label.text-muted You've joined this event
+						button.btn.btn-secondary(type='submit') Cancel
 			.clearfix
 		.clearfix
 		hr

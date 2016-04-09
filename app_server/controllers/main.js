@@ -4,7 +4,7 @@ var validDate = function(req) {
 	var month = req.body.month;
 	var day = req.body.day;
 	var year = req.body.year;
-	if (month!==2) {
+	if (month===2) {
 		if(day>29) return false;
 		if (day===29 && year%4!==0) return false;
 		return true;
@@ -174,7 +174,6 @@ module.exports.submitEvent = function(req, res) {
 			});
 		}
 		else if (response.statusCode===400) {
-			console.log(body);
 			res.status(400);
 			res.send('DB error creating event');
 		}
@@ -183,10 +182,9 @@ module.exports.submitEvent = function(req, res) {
 };
 module.exports.joinEvent = function(req, res) {
 	var requestOptions = {
-		url: 'http://localhost:3002/api/events/join',
+		url: res.locals.hostname + '/api/events/' + req.params.eventId+ '/join',
 		method: 'PUT',
 		qs: {
-			eventId: req.params.eventId,
 			userId: res.locals._id
 		}
 	};
@@ -212,8 +210,8 @@ module.exports.joinEvent = function(req, res) {
 					res.send(body);
 				}
 				else {
-					res.status(200);
-					res.render('events', {
+					res.status(200);//needs to redirect to specific event page
+					res.render('event', {
 						message: 'Event is full',
 						events: body
 					});
@@ -222,16 +220,15 @@ module.exports.joinEvent = function(req, res) {
 		}
 		else {
 			res.status(200);
-			res.redirect('/events');
+			res.redirect('/events/'+req.params.eventId);
 		}
 	});
 };
 module.exports.unjoinEvent = function(req, res) {
 	var requestOptions = {
-		url: 'http://localhost:3002/api/events/cancel',
+		url: res.locals.hostname+'/api/events/'+req.params.eventId+'/cancel',
 		method: 'PUT',
 		qs: {
-			eventId: req.params.eventId,
 			userId: res.locals._id
 		}
 	};
@@ -246,12 +243,11 @@ module.exports.unjoinEvent = function(req, res) {
 			console.log(response);
 			console.log(body);
 			res.status(304);
-			res.send('Could not cancel');
+			res.redirect('/events/'+reeq.params.eventId);
 		}
 		else {
-			console.log(body);
 			res.status(200);
-			res.redirect('/events');
+			res.redirect('/events/'+req.params.eventId);
 		}
 	});
 }
@@ -259,6 +255,7 @@ module.exports.getEvent = function(req, res) {
 	var requestOptions = {
 		url: res.locals.hostname + '/api/events/' + req.params.eventId,
 		method: 'get',
+		qs: {userId: res.locals._id},
 		json: {}
 	};
 	request(requestOptions, function(err, response, body) {
@@ -270,7 +267,8 @@ module.exports.getEvent = function(req, res) {
 		else if (response.statusCode===200) {
 			res.status(200);
 			res.render('eventPage', {
-				event: body
+				participant: body.participant,
+				event: body.event
 			});
 		}
 		else {

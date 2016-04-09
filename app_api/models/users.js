@@ -7,10 +7,10 @@ var userSchema = new mongoose.Schema({
   email: {type: String, unique: true, required: true},
   hash: String,
   salt: String,
-	events: {
-		eventId: mongoose.Schema.Types.ObjectId,
-		eventName: String
-	}
+	events: [{
+		type: String,
+		unique: true
+	}]
 });
 
 userSchema.methods.setPassword = function(password) {
@@ -35,8 +35,8 @@ userSchema.methods.generateJwt = function() {
   }, process.env.JWT_SECRET);
 };
 
-userSchema.methods.addEvent = function(eventId) {
-	
-}
+userSchema.methods.addEvent = function(id) {
+	this.events.push(id);
+};
 
 mongoose.model('User', userSchema);
