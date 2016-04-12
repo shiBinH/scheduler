@@ -12,9 +12,11 @@ mixin addAnnouncement(announcement)
 		.clearfix
 
 block content
-	h2#announcements-title.col-md-12.text-center
-		a.page-header Announcements
 	#announcements-list.col-md-10.col-md-offset-1
-		.list-group
+		h2#announcements-title.col-md-12.text-center
+			a Announcements
+		.clearfix
+		hr
+		#announcementsListGroup.list-group
 			each announcement in announcements
 				+addAnnouncement(announcement)

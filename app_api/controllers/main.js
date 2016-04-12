@@ -129,7 +129,11 @@ module.exports.joinEvent = function(req, res){
 		.update(
 			{_id: req.params.eventId}, 
 			{$addToSet: {
-					participants: {_id: req.query.userId} 
+					participants: {
+						_id: req.query.userId,
+						name: req.query.username,
+						role: req.query.role
+					} 
 				}
 			},
 			function (err, response) {

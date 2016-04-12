@@ -1,5 +1,53 @@
 extends layout
 
+mixin joinButton
+	button.btn.btn-success.pull-right(type='button', data-toggle='modal', data-target='#joinEventForm') Join
+	#joinEventForm.modal.fade(tabindex='-1', role='dialog', aria-labelledby='#eventJoinTitle', aria-hidden='true')
+		.modal-dialog(role='document')
+			.modal-content
+				.modal-header
+					button.close(type='button', data-dismiss='modal', aria-label='close')
+						span(aria-hidden='true') &times;
+					h3#eventJoinTitle.modal-title.text-center.text-info Join #{event.title}
+				.modal-body
+					.container-fluid
+						.row
+							.col-sm-12
+								form(action=hostname+'/events/'+event._id+'/join', method='post')
+									fieldset.form-group
+										label.col-sm-12(for='role') Joining as:
+										.col-sm-6
+											select.form-control(name='role')
+												option(value='Player', selected='selected') Player
+												option(value='Spectator') Spectator
+										.clearfix
+									fieldset.form-group
+										label.col-sm-12
+											input(type='checkbox', name='warning', value='understand', required='required')
+											|	I understand that not showing up for an event I am registered for will have consequences.
+										.clearfix
+									fieldset.form-group
+										.btn-toolbar.col-sm-5.pull-right
+											button.btn.btn-secondary.pull-right(type='button', data-dismiss='modal', aria-label='close') Cancel
+											button.btn.btn-primary.pull-right(type='submit') Join
+
+mixin cancelButton
+	button.btn.btn-secondary.pull-right(type='button', data-toggle='modal', data-target='#cancelMsg') Cancel
+	#cancelMsg.modal.fade(tabindex='-1', role='dialog', aria-labelledby='#cancelMsgTitle', aria-hidden='true')
+		.modal-dialog.modal-sm(role='document')
+			.modal-content
+				.modal-header.text-center
+					h3#cancelMsgTitle.text-info Unjoin #{event.title}
+				.modal-body
+					.container-fluid
+						.row
+							.col-sm-12
+								p You can unjoin an event up until a day before the event starts.
+								form(action=hostname+'/events/'+event._id+'/cancel', method='post')
+									.btn-toolbar-vertical.col-sm-12
+										button.btn.btn-primary.btn-block(type='submit') Unjoin this event
+										button.btn.btn-secondary.btn-block(type='button', data-dismiss='modal', aria-label='close') Nevermind
+								
 block content
 	-var isOpen = event.nRegistered < event.capacity;
 	-var isOver = (new Date(event.time)).getTime() < Date.now();
@@ -7,6 +55,10 @@ block content
 	-var when = localeDate.substring(0, localeDate.length - 6) + localeDate.substring(localeDate.length - 2);
 	-var isRegistered = participant;
 	#eventPage.well.col-sm-12
+		h2.col-md-12.text-center
+			a(href=hostname+ '/events') Events
+		.clearfix
+		hr.blue
 		.col-sm-12
 			h2.col-sm-12.text-primary= event.title
 			.clearfix
@@ -16,19 +68,20 @@ block content
 				|	Where: #{event.location}
 				br
 				if isOver
-					span.label.label-danger Event Over
+					span.label.label-danger EVENT OVER
 				else if isOpen
-					span.label.label-success Open
+					span.label.label-success OPEN
 				else
 					span.label.label-danger CLOSED
 			if isLoggedIn && !isOver
 				if isOpen && !isRegistered
-					form.col-sm-3.text-right.pull-right(action=hostname+'/events/'+event._id+'/join', method='post')
-						button.btn.btn-success(type='submit') Join
+					+joinButton
 				else if isRegistered
-					form.col-sm-4.text-right.pull-right(action=hostname+'/events/'+event._id+'/cancel', method='post')
-						label.text-muted You've joined this event
-						button.btn.btn-secondary(type='submit') Cancel
+					form.col-sm-4.col-sm-offset-3(action=hostname+'/events/'+event._id+'/cancel', method='post')
+						label.text-muted.pull-right
+							span.pull-right You've joined this event
+						br
+						+cancelButton
 			.clearfix
 		.clearfix
 		hr
@@ -40,7 +93,7 @@ block content
 		.col-sm-4
 			.row
 				.col-sm-12 
-					h4 Players
+					h4 Participants
 					ul.list-group
 						li.list-group-item Player 1
 						li.list-group-item Player 2

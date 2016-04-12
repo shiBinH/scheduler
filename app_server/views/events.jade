@@ -9,9 +9,9 @@ mixin getEvents2(event)
 		h2.text-primary= event.title
 			small
 				if isOver
-					span.label.label-danger.pull-right Event Over
+					span.label.label-danger.pull-right EVENT OVER
 				else if isOpen
-					span.label.label-success.pull-right Open
+					span.label.label-success.pull-right OPEN
 				else
 					span.label.label-danger.pull-right CLOSED
 		hr
@@ -25,10 +25,12 @@ mixin getEvents2(event)
 			.col-sm-5.col-sm-offset-1	#{event.summary}
 			.clearfix
 block content
-	h2#events-title.col-md-12.text-center
-		a.page-header Events
 	.col-md-8.col-md-offset-2.text-danger.text-center #{message}
 	#eventsList.col-md-10.col-md-offset-1
-		.list-group
+		h2.col-md-12.text-center
+			a Events
+		.clearfix
+		hr
+		#eventsListGroup.list-group
 			each event in events
 				+getEvents2(event)

@@ -108,7 +108,6 @@ module.exports.getAnnouncement = function(req, res) {
 			res.send('Request error');
 		}
 		else if (response.statusCode===200) {
-			console.log(body);
 			res.status(200);
 			res.render('announcementPage', {
 				announcement: body
@@ -185,7 +184,9 @@ module.exports.joinEvent = function(req, res) {
 		url: res.locals.hostname + '/api/events/' + req.params.eventId+ '/join',
 		method: 'PUT',
 		qs: {
-			userId: res.locals._id
+			userId: res.locals._id,
+			username: res.locals.username,
+			role: req.body.role
 		}
 	};
 	request(requestOptions, function(err, response, body) {

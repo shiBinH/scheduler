@@ -27,6 +27,7 @@ var eventSchema = new Schema({
 		min: 0
 	},
 	participants: [{
+		name: String,
 		role: String
 	}]
 });

@@ -17,11 +17,12 @@ block content
 	.col-md-8.col-md-offset-2.text-danger.text-center #{message}
 	.col-md-8.col-md-offset-2
 		form(action='', method='post')
-			.form-group.col-sm-9
+			fieldset.form-group.col-sm-9
 				label(for='title') Event Name
 				input.form-control(type='text', name='title', required='required')
 			.clearfix
-			.form-group
+			hr
+			fieldset.form-group
 				label.col-sm-12 When:
 					br
 					small.text-muted ie. 4/24/1993
@@ -43,24 +44,26 @@ block content
 						option(value='true', selected='selected') AM
 						option(value='false') PM
 				.clearfix
-			.form-group
+			fieldset.form-group
 				label.col-sm-12(for='location') Where:
 				br
 				.col-sm-10
 					input.form-control.input-sm(type='text', name='location')
-			.form-group
+					.clearfix
+			fieldset.form-group
 				label.col-sm-12(for='capacity') Maximum Number of Participants
 				.col-sm-2
 					input.form-control.input-sm(type='number', min='1', name='capacity')
 				.clearfix
-			.form-group
-				label.col-sm-12(for='summary') Summary
+			hr
+			fieldset.form-group
+				label.col-sm-12(for='summary') Description
 				.col-sm-8
 					input.form-control.input-sm(type='text', name='summary', placeholder='Display text on events list page')
-			.form-group
-				label.col-sm-12(for='description') Description
+			fieldset.form-group
+				label.col-sm-12(for='description') Details
 				.col-sm-12
 					textarea.form-control(name='description')
-			.form-group 
+			fieldset.form-group 
 				.col-sm-12.text-center
 					button.btn.btn-primary(type='submit') Submit

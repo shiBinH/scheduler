@@ -9,11 +9,12 @@ html
 		script(src='//cdn.tinymce.com/4/tinymce.min.js')
 		script tinymce.init({ selector:'textarea' });
 	body#body
-		.container
+		#title-container.container-fluid
 			.row
 				header.col-sm-12
-					h1.page-header.text-center
-						a#title(href=hostname) Scheduler 
+					h1.text-center
+						a#title(href=hostname) 
+							i Scheduler
 		nav.navbar.navbar-default.navbar-fixed-top.navbar-inverse
 			.container
 				.navbar-header
@@ -31,20 +32,20 @@ html
 							a(href=hostname + '/events') EVENTS
 					if !isLoggedIn
 						form.navbar-form.navbar-right(action='/login', method='get')
-							.form-group
+							.btn-toolbar
 								button.btn.btn-secondary.input-sm(type='submit', formaction='/register', method='get') Register
-							.form-group
 								button.btn.btn-primary.input-sm(type='submit') Login
 					else
 						ul.nav.navbar-nav.navbar-right
-							li 
+							li
 								a Welcome #{username}
 							li
 								form.navbar-form(action='/logout', method='get')
 									button.btn.btn-default(type='submit') Logout
-		.container
+		#main.container
 			.row
 				.col-md-10.col-md-offset-1
+					.clearfix
 					block content
 				.clearfix
 		.container
