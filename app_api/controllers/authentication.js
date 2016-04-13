@@ -33,7 +33,7 @@ module.exports.register = function(req, res) {
 };
 
 module.exports.login = function(req, res) {
-  if(!req.body.login || !req.body.password) {
+  if(!req.body.email || !req.body.password) {
     res.status(400);
     res.json({
       message: "All fields required"

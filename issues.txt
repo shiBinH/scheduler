@@ -1,6 +1,7 @@
 
 2. comments
 3. home page
+3. use express-jwt instead of res.locals authorization
 4. scripts
 5. AJAX
 6. admin powers

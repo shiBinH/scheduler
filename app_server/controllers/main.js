@@ -333,7 +333,7 @@ module.exports.loginForm = function(req, res) {
 	res.render('login');
 };
 module.exports.loginCtrl = function(req, res) {
-	if (!req.body.login || !req.body.password) {
+	if (!req.body.email || !req.body.password) {
 		res.render('/login', {
 			message: 'All fields required'
 		});
@@ -344,7 +344,7 @@ module.exports.loginCtrl = function(req, res) {
 		url: 'http://localhost:3002/api/login',
 		method: 'POST',
 		json: {
-			login: req.body.login,
+			email: req.body.email,
 			password: req.body.password
 		}
 	}
