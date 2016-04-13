@@ -28,6 +28,7 @@ var formatDate = function(body) {
 	return new Date(body.year, body.month - 1, body.day, hour, body.minute);
 };
 
+
 module.exports.loginCheck = function(req, res, next) {
 	var token = req.session.schedulerToken;
 	if (token) {
@@ -85,8 +86,8 @@ module.exports.createAnnouncement = function(req, res) {
 
 	request(requestOptions, function(err, response, body) {
 		if(err) res.send('Request Error');
-		else if (response.statusCode===404) {
-		    console.log("invalid token");
+		else if (response.statusCode===401) {
+		    console.log("Invalid token");
 		    res.redirect(req.originalUrl);
 		}
 		else {
@@ -147,6 +148,7 @@ module.exports.addEventsCtrl = function(req, res) {
 	});
 };
 module.exports.submitEvent = function(req, res) {
+	var tokenHeader = 'Bearer ' + req.session.schedulerToken;
 	if (!validDate(req)) {
 		res.render('eventsForm', {
 			message: 'Invalid date'
@@ -156,6 +158,9 @@ module.exports.submitEvent = function(req, res) {
 	var requestOptions = {
 		url: 'http://localhost:3002/api/events/new',
 		method: 'POST',
+		headers: {
+			token: tokenHeader
+		},
 		json: {
 			title: req.body.title,
 			summary: req.body.summary,
@@ -180,9 +185,13 @@ module.exports.submitEvent = function(req, res) {
 	});
 };
 module.exports.joinEvent = function(req, res) {
+	var tokenHeader = 'Bearer ' + req.session.schedulerToken;
 	var requestOptions = {
 		url: res.locals.hostname + '/api/events/' + req.params.eventId+ '/join',
 		method: 'PUT',
+		headers: {
+			token: tokenHeader
+		},
 		qs: {
 			userId: res.locals._id,
 			username: res.locals.username,
@@ -226,9 +235,13 @@ module.exports.joinEvent = function(req, res) {
 	});
 };
 module.exports.unjoinEvent = function(req, res) {
+	var tokenHeader = 'Bearer ' + req.session.schedulerToken;
 	var requestOptions = {
 		url: res.locals.hostname+'/api/events/'+req.params.eventId+'/cancel',
 		method: 'PUT',
+		headers: {
+			token: tokenHeader
+		},
 		qs: {
 			userId: res.locals._id
 		}
@@ -372,18 +385,21 @@ module.exports.logoutCtrl = function(req, res) {
 };
 
 module.exports.userPageCtrl = function(req, res) {
+	var tokenHeader = 'Bearer ' + req.session.schedulerToken;
 	var pastEvents, upcomingEvents;
 	pastEvents = [];
 	upcomingEvents = [];
 	var requestOptions = {
 		url: res.locals.hostname + '/api/user/' + req.params.userId,
+		headers: {
+			token: tokenHeader
+		},
 		method: 'GET',
 		json: {}
 	};
 	request(requestOptions, function(err, response, body) {
 		if (err) console.log(err);
 		else if (response.statusCode==200) {
-			console.log(body);
 			for (var i=0; i<body.events.length; i++) {
 				var isOver = (new Date(body.events[i].time)).getTime() < Date.now();
 				if (isOver) pastEvents.push(body.events[i]);

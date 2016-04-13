@@ -13,8 +13,8 @@ router.use(mainCtrl.loginCheck);
 router.get('/', mainCtrl.homeCtrl);
 
 router.get('/announcements', mainCtrl.announceCtrl);
-router.get('/announcements/new',auth, mainCtrl.announcementForm);
-router.post('/announcements/new', mainCtrl.createAnnouncement);
+router.get('/announcements/new', mainCtrl.announcementForm);
+router.post('/announcements/new', auth,mainCtrl.createAnnouncement);
 router.get('/announcements/:announcementId/:announcementTitle', mainCtrl.getAnnouncement);
 
 router.get('/events', mainCtrl.eventsCtrl);

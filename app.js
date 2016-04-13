@@ -46,9 +46,9 @@ app.use(function(err, req, res, next) {
   if (err.name === 'UnauthorizedError') {
     res.status(401);
     console.log('@@@@@\n@@@@@\tAuthorization Failed\n@@@@@');
-    res.redirect('/');
+		console.log(err);
+    res.json({message: 'Unauthorized Access'});
   }
-	next();
 });
 // development error handler
 // will print stacktrace

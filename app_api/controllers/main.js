@@ -171,7 +171,7 @@ module.exports.joinEvent = function(req, res){
 };
 module.exports.unjoinEvent = function(req, res) {
 	userModel// get user
-		.update({id:req.query._id}, {
+		.update({_id:req.query.userId}, {
 			$pull: {// remove event from events field
 				events: req.params.eventId
 			}
@@ -180,7 +180,8 @@ module.exports.unjoinEvent = function(req, res) {
 					console.log('@@@@@\n@@@@@\tDB Error:\n@@@@@');
 				}
 				else {
-					console.log('@@@@@\n@@@@@\tSuccessfully updated\n@@@@@')
+					console.log('@@@@@\n@@@@@\tSuccessfully updated\n@@@@@');
+					console.log(response);
 				}
 	});
 	eventModel.update({_id: req.params.eventId}, {// get event
