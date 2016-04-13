@@ -27,4 +27,7 @@ router.get('/events/:eventId', mainCtrl.getEvent);
 router.post('/register', authCtrl.register);
 router.post('/login', authCtrl.login);
 
+router.get('/user/:userId', mainCtrl.userPage);
+router.get('/user/events', mainCtrl.userEvents);
+
 module.exports = router;

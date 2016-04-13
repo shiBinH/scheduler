@@ -50,6 +50,11 @@ module.exports.getAnnounce = function(req, res) {
 				res.status(400);
 				res.json(err);
 			}
+			else if (!data) {
+				console.log('\n\tCannot find user\n');
+				res.status(404);
+				res.json(data);
+			}
 			else {
 				console.log('\n\t\tQuery was successful!\n');
 				data.time = formatDate(data.createdAt);
@@ -180,7 +185,7 @@ module.exports.unjoinEvent = function(req, res) {
 	});
 	eventModel.update({_id: req.params.eventId}, {// get event
 		$pull: {//($pull removes elements from an array matching a condition)
-			participants: {id: req.query.userId}// remove user
+			participants: {_id: req.query.userId}// remove user
 		}
 	}, function(err, response) {// (response is the "full resposne from mongo")
 			if (err) {
@@ -215,7 +220,7 @@ module.exports.getEvent = function(req, res) {
 		.findOne({_id: req.params.eventId}) 
 		.exec(function(err, event) {//get event
 				if (err) {
-					console.log('DB Search error');
+					console.log('\n\tEvent Not Round\n');
 					res.status(400);
 					res.json(err);
 				}
@@ -246,4 +251,51 @@ module.exports.getEvent = function(req, res) {
 				}
 			}
 		);
+};
+
+module.exports.userPage = function(req, res) {
+	userModel//find user
+		.findOne(
+			{_id: req.params.userId}, 
+			null,
+			{},
+			function(err, user) {
+				if (err) {
+					console.log('\n\tDB Server Error\n');
+					res.status(400);
+					res.json(err);
+				}
+				else if (!user) {
+					console.log('\n\tFailed to find user\n');
+					res.status(404);
+					res.json(user);
+				}
+				else {
+					console.log('\n\tFound user!\n');
+					eventModel.find(//find events
+						{_id: {$in: user.events}},//query criteria
+						{time: true, title: true},//projections
+						{sort: {time:-1}},//other options
+						function(err2, events) {//callback
+							if (err2) {
+								console.log('\n\tFail to find events\n');
+								res.status(400);
+								res.json(err);
+							}
+							else {
+								console.log('\n\tFound user events!\n');
+								res.status(200);
+								res.json({
+									user: user,
+									events: events
+								});
+							}
+						}
+					);
+				}
+			}
+		);
+};
+module.exports.userEvents = function(req, res) {
+	
 };

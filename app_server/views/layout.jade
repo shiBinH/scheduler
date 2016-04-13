@@ -38,7 +38,7 @@ html
 					else
 						ul.nav.navbar-nav.navbar-right
 							li
-								a Welcome #{username}
+								a(href=hostname+'/user/'+_id) Welcome #{username}
 							li
 								form.navbar-form(action='/logout', method='get')
 									button.btn.btn-default(type='submit') Logout

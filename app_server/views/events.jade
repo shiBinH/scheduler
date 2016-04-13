@@ -3,6 +3,7 @@ extends layout
 mixin getEvents2(event)
 	-var isOpen = event.nRegistered < event.capacity;
 	-var isOver = (new Date(event.time)).getTime() < Date.now();
+	-var registrationClosed = (new Date(event.time)).getTime() - (24* 60 * 60 * 1000) < Date.now();
 	-var localeDate = (new Date(event.time)).toLocaleString();
 	-var when = localeDate.substring(0, localeDate.length - 6) + localeDate.substring(localeDate.length - 2);
 	a.list-group-item(href=hostname + '/events/'+event._id)
@@ -10,7 +11,7 @@ mixin getEvents2(event)
 			small
 				if isOver
 					span.label.label-danger.pull-right EVENT OVER
-				else if isOpen
+				else if isOpen && !registrationClosed
 					span.label.label-success.pull-right OPEN
 				else
 					span.label.label-danger.pull-right CLOSED
@@ -22,7 +23,8 @@ mixin getEvents2(event)
 			br
 			i
 				b Description:
-			.col-sm-5.col-sm-offset-1	#{event.summary}
+			.col-sm-5.col-sm-offset-1
+				i= event.summary
 			.clearfix
 block content
 	.col-md-8.col-md-offset-2.text-danger.text-center #{message}

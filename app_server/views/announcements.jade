@@ -3,7 +3,8 @@ mixin addAnnouncement(announcement)
 	a.list-group-item(href=hostname+'/announcements/'+announcement._id+'/'+announcement.title)
 		h2.text-primary= announcement.title
 		hr
-		p.col-sm-4= announcement.summary
+		p.col-sm-4
+			i= announcement.summary
 		footer.text-muted.text-right.pull-right.col-sm-3
 			small
 				|	#{announcement.author}

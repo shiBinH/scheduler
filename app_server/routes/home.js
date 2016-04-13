@@ -31,5 +31,7 @@ router.get('/login', mainCtrl.loginForm);
 router.post('/login', mainCtrl.loginCtrl);
 router.get('/logout',mainCtrl.logoutCtrl);
 
+router.get('/user/:userId', mainCtrl.userPageCtrl);
+router.get('/user/:userId/events', mainCtrl.userEvents);
 
 module.exports = router;

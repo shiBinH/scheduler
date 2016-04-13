@@ -35,12 +35,11 @@ app.use('/', routes);
 app.use('/api', apiRoutes);
 app.use('/users', users);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
+// catch 404 
+app.use(function(req, res, next){
+	res.status(404);
+	res.redirect('/');
+})
 
 // error handlers
 app.use(function(err, req, res, next) {
@@ -49,6 +48,7 @@ app.use(function(err, req, res, next) {
     console.log('@@@@@\n@@@@@\tAuthorization Failed\n@@@@@');
     res.redirect('/');
   }
+	next();
 });
 // development error handler
 // will print stacktrace

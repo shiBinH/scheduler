@@ -41,7 +41,7 @@ module.exports.loginCheck = function(req, res, next) {
 	req.headers['authorization'] = 'Bearer ' + token;
 	res.locals.hostname = 'http://' + req.hostname + ':3002';
 	next();
-};
+};//needs modification
 
 module.exports.homeCtrl = function (req, res) {
 	res.render('index');
@@ -115,8 +115,8 @@ module.exports.getAnnouncement = function(req, res) {
 		}
 		else {
 			console.log(body);
-			res.status(400);
-			res.send('Error');
+			res.status(404);
+			res.redirect('/');
 		}
  	});
 };
@@ -267,6 +267,7 @@ module.exports.getEvent = function(req, res) {
 		}
 		else if (response.statusCode===200) {
 			res.status(200);
+			console.log(body.event);
 			res.render('eventPage', {
 				participant: body.participant,
 				event: body.event
@@ -275,7 +276,7 @@ module.exports.getEvent = function(req, res) {
 		else {
 			console.log(body);
 			res.status(400);
-			res.send(response);
+			res.redirect('/');
 		}
 	});
 }
@@ -296,7 +297,12 @@ module.exports.registerCtrl = function(req, res) {
 		json: {
 			username: req.body.username,
 			password: req.body.password,
-			email: req.body.email
+			email: req.body.email,
+			firstName: req.body.firstName,
+			lastName: req.body.lastName,
+			age: req.body.age,
+			gender: req.body.gender,
+			bio: req.body.bio
 		}
 	}
 	request(requestOptions, function(err, response, body) {
@@ -364,3 +370,38 @@ module.exports.logoutCtrl = function(req, res) {
 	res.status(200);
 	res.redirect('/');
 };
+
+module.exports.userPageCtrl = function(req, res) {
+	var pastEvents, upcomingEvents;
+	pastEvents = [];
+	upcomingEvents = [];
+	var requestOptions = {
+		url: res.locals.hostname + '/api/user/' + req.params.userId,
+		method: 'GET',
+		json: {}
+	};
+	request(requestOptions, function(err, response, body) {
+		if (err) console.log(err);
+		else if (response.statusCode==200) {
+			console.log(body);
+			for (var i=0; i<body.events.length; i++) {
+				var isOver = (new Date(body.events[i].time)).getTime() < Date.now();
+				if (isOver) pastEvents.push(body.events[i]);
+				else upcomingEvents.push(body.events[i]);
+			}
+			res.render('user', {
+				user: body.user,
+				pastEvents: pastEvents,
+				upcomingEvents: upcomingEvents
+			})
+		}
+		else {
+			console.log(body);
+			res.status(400);
+			res.redirect('/');
+		}
+	})
+};
+module.exports.userEvents = function(req, res) {
+
+}

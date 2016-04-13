@@ -1,20 +1,71 @@
 extends layout
 
 block content
-	h2#register.col-md-12.text-center 
-		a.page-header Register
+	h2.col-md-9.text-primary.col-sm-offset-1 Register
+		hr.thickgrey
 	.col-md-8.col-md-offset-2.text-danger #{message}
 	.clearfix
 	.col-md-8.col-md-offset-2
 		form(action='', method='post')
-			.form-group
-				label(for='username') Username
-				input.form-control(type='text', name='username', placeholder='Username')
-			.form-group
-				label(for='password') Password
-				input.form-control(type='password', name='password', placeholder='Password')
-			.form-group
-				label(for='email') Contact Email
-				input.form-control(type='email', name='email', placeholder='Email')
-			.text-right
+			fieldset
+				legend
+					h3.text-info 
+						i User Information
+				.col-sm-12
+					fieldset.form-group
+						label(for='username') Username
+						.clearfix
+						.col-sm-6
+							input.form-control.input-sm(type='text', name='username', placeholder='Username')
+					.clearfix
+					fieldset.form-group
+						label(for='password') Password
+						.clearfix
+						.col-sm-6
+							input.form-control.input-sm(type='password', name='password', placeholder='Password')
+					.clearfix
+					fieldset.form-group
+						label(for='confirmPassword') Confirm Password
+						.clearfix
+						.col-sm-6
+							input.form-control.input-sm(type='password', name='confirmPassword', placeholder='Confirm Password')
+					.clearfix
+					fieldset.form-group
+						label(for='email') Contact Email
+						.clearfix
+						.col-sm-8
+							input.form-control.input-sm(type='email', name='email', placeholder='Email')
+					.clearfix
+			fieldset
+				legend.text-info
+					i Personal Info
+				.col-sm-12
+					fieldset.form-group
+						label(for='firstName') First Name
+						.clearfix
+						.col-sm-6
+							input.form-control.input-sm(type='text', name='firstName')
+					fieldset.form-group
+						label(for='lastName') Last Name
+						.clearfix
+						.col-sm-6
+							input.form-control.input-sm(type='text', name='lastName')
+					fieldset.form-group
+						label(for='age') Age
+						.clearfix
+						.col-sm-3
+							input.form-control.input-sm(type='number', name='age', min='0', max='150')
+					fieldset.form-group
+						label(for='gender') Gender
+						.clearfix
+						.col-sm-6
+							select.form-control(name='gender')
+								option(value='Male') Male
+								option(value='Female') Female
+					fieldset.form-group
+						label(for='bio') Personal Description
+						.clearfix
+						.col-sm-12
+							textarea.form-control(name='bio')
+			fieldset.form-group.text-center
 				button.btn.btn-primary(type='submit') Submit

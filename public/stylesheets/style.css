@@ -25,12 +25,13 @@ h1 {
 #homeAnnouncements ul li footer {
 	font-size: .65em;
 }
-#eventsList, #announcements-list, #announcementPage, #eventPage {
-	background-color: white;
+#eventsList, #announcements-list, #announcementPage, #eventPage, #userPage {
+	background-color: floralwhite;
 	padding-top: 1em;
+	padding-bottom: 1em;
 	box-shadow: 0 20px 25px 5px;
 }
-#eventsListGroup a:hover, #announcementsListGroup a:hover{
+#eventsListGroup a:hover, #announcementsListGroup a:hover, #userPageUpcomingList a:hover, #userPagePastList a:hover {
 	border-left: 1.5px solid green;
 	border-right: 1.5px solid green;
 }
@@ -55,6 +56,31 @@ h1 {
 	text-decoration: none;
 }
 
+#userPage {
+	margin-bottom: 2em;
+}
+#userPageUpcomingList, #userPagePastList {
+	margin-top: 1em;
+	max-height: 400px;
+	overflow: auto;
+}
+#userPageUpcomingList a {
+	background-color: beige;
+}
+#userPagePastList a {
+	background-color: #cccccc;
+}
+
 textarea {
 	resize: vertical;
+}
+hr.thickgrey {
+	border-color: lightslategrey;
+	border-width: 4px;
+}
+hr.thingrey {
+	border-color: darkslategray;
+}
+#moreLineHeight {
+	line-height: 1.5em;
 }

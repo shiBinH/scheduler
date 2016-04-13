@@ -51,6 +51,7 @@ mixin cancelButton
 block content
 	-var isOpen = event.nRegistered < event.capacity;
 	-var isOver = (new Date(event.time)).getTime() < Date.now();
+	-var registrationClosed = (new Date(event.time)).getTime() - (24* 60 * 60 * 1000) < Date.now();
 	-var localeDate = (new Date(event.time)).toLocaleString();
 	-var when = localeDate.substring(0, localeDate.length - 6) + localeDate.substring(localeDate.length - 2);
 	-var isRegistered = participant;
@@ -58,7 +59,7 @@ block content
 		h2.col-md-12.text-center
 			a(href=hostname+ '/events') Events
 		.clearfix
-		hr.blue
+		hr
 		.col-sm-12
 			h2.col-sm-12.text-primary= event.title
 			.clearfix
@@ -69,12 +70,16 @@ block content
 				br
 				if isOver
 					span.label.label-danger EVENT OVER
-				else if isOpen
+				else if isOpen & !registrationClosed
 					span.label.label-success OPEN
 				else
 					span.label.label-danger CLOSED
 			if isLoggedIn && !isOver
-				if isOpen && !isRegistered
+				if isRegistered && registrationClosed
+					span.text-muted.pull-right You'ved joined this event
+				else if registrationClosed
+					span.text-muted.pull-right	Registration Closed
+				else if isOpen && !isRegistered
 					+joinButton
 				else if isRegistered
 					form.col-sm-4.col-sm-offset-3(action=hostname+'/events/'+event._id+'/cancel', method='post')
@@ -95,8 +100,10 @@ block content
 				.col-sm-12 
 					h4 Participants
 					ul.list-group
-						li.list-group-item Player 1
-						li.list-group-item Player 2
+						for participant in event.participants
+							li.list-group-item
+								a(href=hostname+'/user/'+participant._id) #{participant.name} 
+								i	(#{participant.role})
 		.clearfix
 		hr
 		#comments.col-sm-8

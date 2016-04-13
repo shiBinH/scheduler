@@ -1,0 +1,59 @@
+extends layout
+
+mixin formatTime(time)
+	-var localeDate = (new Date(time)).toLocaleString();
+	-var when = localeDate.substring(0, localeDate.length - 6) + localeDate.substring(localeDate.length - 2);
+	|	#{when}
+block content
+	#userPage.container.col-sm-10.col-sm-offset-1
+		.row
+			.col-sm-11
+				h2.text-primary 
+					b= user.login
+				hr.thickgrey
+		.row
+			.col-sm-10.col-sm-offset-1
+				h3.text-info
+					i Personal Info 
+				p#moreLineHeight.col-sm-8
+					|	Name: #{user.firstName} #{user.lastName}
+					br
+					|	Age: #{user.age}
+					br
+					|	Email: #{user.email}
+					br
+					|	Gender: #{user.gender}
+				.clearfix
+				.col-sm-12
+					p About:
+				.col-sm-8.col-sm-offset-1
+					!{user.bio}
+				.clearfix
+				hr.thingrey
+		.row
+			.col-sm-10.col-sm-offset-1
+				h3.text-info
+					i Upcoming Events
+				.col-sm-10
+					#userPageUpcomingList.list-group
+						for event in upcomingEvents
+							a.list-group-item(href=hostname+'/events/'+event._id)
+								|	#{event.title}
+								br
+								small.text-muted When: 
+								+formatTime(event.time)
+				.clearfix
+				hr.thingrey
+		.row
+			.col-sm-10.col-sm-offset-1
+				h3.text-info
+					i Past Events
+				.col-sm-10
+					#userPagePastList.list-group
+						for event in pastEvents
+							a.list-group-item(href=hostname+'/events/'+event._id)
+								|	#{event.title}
+								br
+								small.text-muted When: 
+								+formatTime(event.time)
+				.clearfix
