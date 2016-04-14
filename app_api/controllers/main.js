@@ -78,6 +78,40 @@ module.exports.addAnnounce = function (req, res) {
 		}
 	});
 };
+module.exports.submitAnnounceComment = function(req, res) {
+	announcementsModel
+		.findOne({_id: req.params.announcementId})
+		.exec(
+			function(err, announcement) {
+				if (err) {
+					console.log('\n\tDB Error\n');
+					res.status(400);
+					res.json(err);
+				}
+				console.log(announcement);
+				announcement.comments.push({
+					userId: req.payload._id,
+					userName: req.payload.login, 
+					comment: req.body.comment
+				});
+				announcement
+					.save(
+						function(err2, data) {
+							if (err2) {
+								console.log('\n\tAPI: failed to add comment');
+								res.status(400);
+								res.json(err2);
+							}
+							else {
+								console.log('\n\nAPI: Successfully updated DB');
+								res.status(200);
+								res.json(data);
+							}
+						}
+					);
+			}
+		);
+}
 
 module.exports.eventsList = function(req, res) {
 	eventModel
@@ -118,7 +152,7 @@ module.exports.addEvent = function(req, res) {
 module.exports.joinEvent = function(req, res){
 	userModel
 		.update(
-			{_id: req.query.userId}, 
+			{_id: req.payload._id}, 
 			{$addToSet: {events: req.params.eventId}},
 			function(err, response) {
 				if (err) {
@@ -135,7 +169,7 @@ module.exports.joinEvent = function(req, res){
 			{_id: req.params.eventId}, 
 			{$addToSet: {
 					participants: {
-						_id: req.query.userId,
+						_id: req.payload._id,
 						name: req.query.username,
 						role: req.query.role
 					} 
@@ -154,8 +188,8 @@ module.exports.joinEvent = function(req, res){
 			function(err, event){
 				event.fixNRegistered();
 				event.save(
-					function(err, data) {
-						if (err) { 
+					function(err2, data) {
+						if (err2) { 
 							console.log('\n\tFailed to update nRegistered\n');
 							res.status(400);
 							res.json(err);
@@ -171,7 +205,7 @@ module.exports.joinEvent = function(req, res){
 };
 module.exports.unjoinEvent = function(req, res) {
 	userModel// get user
-		.update({_id:req.query.userId}, {
+		.update({_id:req.payload._id}, {
 			$pull: {// remove event from events field
 				events: req.params.eventId
 			}
@@ -186,7 +220,7 @@ module.exports.unjoinEvent = function(req, res) {
 	});
 	eventModel.update({_id: req.params.eventId}, {// get event
 		$pull: {//($pull removes elements from an array matching a condition)
-			participants: {_id: req.query.userId}// remove user
+			participants: {_id: req.payload._id}// remove user
 		}
 	}, function(err, response) {// (response is the "full resposne from mongo")
 			if (err) {
@@ -227,7 +261,7 @@ module.exports.getEvent = function(req, res) {
 				}
 				else {//get event containing user info
 					eventModel
-						.findOne({_id: req.params.eventId, 'participants._id': req.query.userId},
+						.findOne({_id: req.params.eventId, 'participants._id': req.query._id},
 										{'participants.$': 1}, {},//project participants array
 										function(err, event2) {
 											if (event2) {
@@ -253,11 +287,44 @@ module.exports.getEvent = function(req, res) {
 			}
 		);
 };
+module.exports.submitEventComment = function(req, res) {
+	eventModel
+		.findOne({_id: req.params.eventId})
+		.exec(
+			function(err, event) {
+				if (err) {
+					console.log('\n\tDB Error\n');
+					res.status(400);
+					res.json(err);
+				}
+				console.log(event);
+				event.comments.push({
+					userId: req.payload._id,
+					userName: req.payload.login, 
+					comment: req.body.comment
+				})
+				event.save(
+					function(err2, data) {
+						if (err2) {
+							console.log;
+							res.status(400);
+							res.json(err2);
+						}
+						else {
+							console.log('\n\tAPI: Successfully updated DB\n');
+							res.status(200);
+							res.json(data);
+						}
+					}
+				);
+			}
+		);
+};
 
 module.exports.userPage = function(req, res) {
 	userModel//find user
 		.findOne(
-			{_id: req.params.userId}, 
+			{_id: req.payload._id}, 
 			null,
 			{},
 			function(err, user) {

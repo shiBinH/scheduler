@@ -1,12 +1,18 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
+var commentSchema = new Schema({
+	userId: Schema.Types.ObjectId,
+	userName: String,
+	comment: String
+}, {timestamps: true});
 var announcementSchema = new Schema({
 	title: {type: String, required: true},
 	summary: {type: String, required: true},
 	description: {type: String, required: true},
 	author: {type: String, default: 'Admin'},
-	time: String
+	time: String,
+	comments: [commentSchema]
 }, {
 	timestamps: true
 });
@@ -29,7 +35,8 @@ var eventSchema = new Schema({
 	participants: [{
 		name: String,
 		role: String
-	}]
+	}],
+	comments: [commentSchema]
 });
 
 eventSchema.methods.add = function(participant) {

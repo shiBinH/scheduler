@@ -1,5 +1,10 @@
 extends layout
 
+mixin formatInfo(comment)
+	-var localeDate = (new Date(comment.createdAt)).toLocaleString();
+	-var when = localeDate.substring(0, localeDate.length - 6) + localeDate.substring(localeDate.length - 2);
+	a(href=hostname+'/user/'+comment.userId) #{comment.userName} 
+	small.text-muted on #{when}
 block content
 	#announcementPage.well.col-sm-10.col-sm-offset-1
 		ol.breadcrumb.text-right
@@ -16,25 +21,28 @@ block content
 			| #{announcement.time}
 		.clearfix
 		hr
-		.col-sm-12!= announcement.description
+		.col-sm-12 
+			p.text-info Details:
+			.col-sm-10!= announcement.description
+			.clearfix
 		.clearfix
 		hr
 		#comments.col-sm-8
 			h4 Comments
 			ul.list-group
-				li.list-group-item
-					a
-						i Amazon SDE 3:
-					p
-						small.text-muted Magnificent Website
-				li.list-group-item
-					a
-						i Principle Software Engineer @Google:
-					p 
-						small.text-muted Scheduler is incredible
-				li.list-group-item
-					a
-						i Shi Wen:
-					p.text-muted
-						small God did a great job here
+				for comment in announcement.comments
+					li.list-group-item
+						+formatInfo(comment)
+						br
+						span.col-sm-10
+							small!= comment.comment
+						.clearfix
+			if isLoggedIn
+				form(action=hostname+'/announcements/'+announcement._id+'/comments/add', method='post')
+					fieldset.form-group
+						label
+							span.text-muted Make a comment
+						textarea.form-control(name='comment')
+					fieldset.form-group
+						button.btn.btn-primary.btn-sm(type='submit') Submit
 		.clearfix

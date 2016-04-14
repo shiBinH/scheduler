@@ -37,6 +37,7 @@ app.use('/users', users);
 
 // catch 404 
 app.use(function(req, res, next){
+	console.log('\n\tAddress not found\n');
 	res.status(404);
 	res.redirect('/');
 })
@@ -72,8 +73,9 @@ app.use(function(err, req, res, next) {
   });
 });
 
-app.listen(3002, function() {
-	console.log('Connected! ~ on port 3002');
-});
+app.set('port', 3002);
+app.listen(app.get('port'), function(){
+	console.log('Connected to port 3002~')
+})
 
 module.exports = app;

@@ -18,12 +18,14 @@ router.use(setAuthHeader);
 router.get('/announcements', mainCtrl.announceList);
 router.get('/announcements/:id', mainCtrl.getAnnounce);
 router.post('/announcements/new', auth, mainCtrl.addAnnounce);
+router.put('/announcements/:announcementId/comments/add', auth, mainCtrl.submitAnnounceComment);
 
 router.get('/events', mainCtrl.eventsList);
 router.post('/events/new', auth, mainCtrl.addEvent);
 router.put('/events/:eventId/join', auth, mainCtrl.joinEvent);
 router.put('/events/:eventId/cancel', auth, mainCtrl.unjoinEvent);
 router.get('/events/:eventId', mainCtrl.getEvent);
+router.put('/events/:eventId/comments/add', auth, mainCtrl.submitEventComment);
 
 router.post('/register', authCtrl.register);
 router.post('/login', authCtrl.login);

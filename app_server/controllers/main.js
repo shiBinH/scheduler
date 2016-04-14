@@ -36,7 +36,7 @@ module.exports.loginCheck = function(req, res, next) {
 		var payload = JSON.parse(payloadEncoded.toString());
 		res.locals.isLoggedIn = payload.exp > Date.now() / 1000;
 		res.locals.username = payload.login;
-		res.locals._id = payload._id;
+		res.locals._id = payload._id;//check views for this and replace with req.payload._id
 		res.locals.email = payload.email;
 	}
 	req.headers['authorization'] = 'Bearer ' + token;
@@ -121,6 +121,31 @@ module.exports.getAnnouncement = function(req, res) {
 		}
  	});
 };
+module.exports.submitAnnounceComment = function(req, res) {
+	var tokenHeader = 'Bearer ' + req.session.schedulerToken;
+	var requestOptions = {
+		url: res.locals.hostname+'/api/announcements/'+req.params.announcementId+'/comments/add',
+		method: 'PUT',
+		headers: {
+			token: tokenHeader
+		},
+		json: {
+			comment: req.body.comment
+		}
+	};
+	request(requestOptions, function(err, response, body) {
+		if (err) {
+			console.log('\n\tFailed to request api\n');
+			res.status(400);
+			res.redirect('/announcements/' + req.params.announcementId + '/back');
+		}
+		else {
+			console.log('\n\tSuccessfully added a comment!\n');
+			res.status(200);
+			res.redirect('/announcements/' + req.params.announcementId + '/back');
+		}
+	})
+};
 
 module.exports.eventsCtrl = function(req, res) {
 	var requestOptions = {
@@ -193,7 +218,6 @@ module.exports.joinEvent = function(req, res) {
 			token: tokenHeader
 		},
 		qs: {
-			userId: res.locals._id,
 			username: res.locals.username,
 			role: req.body.role
 		}
@@ -241,9 +265,6 @@ module.exports.unjoinEvent = function(req, res) {
 		method: 'PUT',
 		headers: {
 			token: tokenHeader
-		},
-		qs: {
-			userId: res.locals._id
 		}
 	};
 	request(requestOptions, function(err, response, body) {
@@ -269,8 +290,10 @@ module.exports.getEvent = function(req, res) {
 	var requestOptions = {
 		url: res.locals.hostname + '/api/events/' + req.params.eventId,
 		method: 'get',
-		qs: {userId: res.locals._id},
-		json: {}
+		json: {},
+		qs: {
+			_id: res.locals._id
+		}
 	};
 	request(requestOptions, function(err, response, body) {
 		if (err) {
@@ -293,6 +316,31 @@ module.exports.getEvent = function(req, res) {
 		}
 	});
 }
+module.exports.submitEventComment = function(req, res) {
+	var tokenHeader = 'Bearer ' + req.session.schedulerToken;
+	var requestOptions = {
+		url: res.locals.hostname+'/api/events/'+req.params.eventId+'/comments/add',
+		method: 'PUT',
+		headers: {
+			token: tokenHeader
+		},
+		json: {
+			comment: req.body.comment
+		}
+	};
+	request(requestOptions, function(err, response, body) {
+		if (err) {
+			console.log('\n\tFailed to request api\n');
+			res.status(400);
+			res.redirect('/events/'+req.params.eventId);
+		}
+		else {
+			console.log('\n\tSuccessfully added a comment!\n');
+			res.status(200);
+			res.redirect('/events/'+req.params.eventId);
+		}
+	});
+};
 
 module.exports.registerForm = function(req, res) {
 	res.render('register', {message: ''});

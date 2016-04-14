@@ -16,6 +16,7 @@ router.get('/announcements', mainCtrl.announceCtrl);
 router.get('/announcements/new', mainCtrl.announcementForm);
 router.post('/announcements/new', auth,mainCtrl.createAnnouncement);
 router.get('/announcements/:announcementId/:announcementTitle', mainCtrl.getAnnouncement);
+router.post('/announcements/:announcementId/comments/add', mainCtrl.submitAnnounceComment);
 
 router.get('/events', mainCtrl.eventsCtrl);
 router.get('/events/new', auth, mainCtrl.addEventsCtrl);
@@ -23,6 +24,7 @@ router.post('/events/new', mainCtrl.submitEvent);
 router.post('/events/:eventId/join', mainCtrl.joinEvent);
 router.post('/events/:eventId/cancel', mainCtrl.unjoinEvent);
 router.get('/events/:eventId', mainCtrl.getEvent);
+router.post('/events/:eventId/comments/add', mainCtrl.submitEventComment);
 
 router.get('/register', mainCtrl.registerForm);
 router.post('/register', mainCtrl.registerCtrl);
