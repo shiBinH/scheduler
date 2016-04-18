@@ -1,48 +1,42 @@
 extends layout
 
 block content
-	h2.col-md-12.text-center Welcome!
-	#homeAnnouncements.col-md-6
-		h2.text-center
-			a(href="") Announcements
-		ul.list-group
-			li.list-group-item
-				h3 Reminder! 
-				p	Attention!! Please fill in all the fields when registering. Thank you!
-				footer.text-muted.text-right March 24th, 2016
-			li.list-group-item
-				h3 Announcement 3 
-				p	Listen up all!!! This is the third announcement since god created this website. Please check the announcements tab for past announcements and the games tab for upcoming/past games.
-				footer.text-muted.text-right March 24th, 2016
-			li.list-group-item
-				h3 Announcement 2 
-				p	Listen up all!!! This is the second announcement since god created this website. Please check the announcements tab for past announcements and the games tab for upcoming/past games.
-				footer.text-muted.text-right March 23rd, 2016
-			li.list-group-item
-				h3 Welcome! 
-				p	God created this website on the 3rd day.
-				footer.text-muted.text-right March 22nd, 2016
-	#homeEvents.col-md-6
-		h2.text-center 
-			a(href="") Upcoming Events
-		ul.list-group
-			li.list-group-item
-				h3 League of Bronze B Match #15
-				|	Time: Friday April 1st 8:00 EST
-				br
-				span.label.label-success OPEN
-				p A weekly match featuring a standard 5v5 battle on the rift between a team of bronze-silver and a team of gold-plat players
-			li.list-group-item
-				h3 League of Bronze A Match #15
-				|	Time: Thursday March 31st 8:00 EST
-				br
-				span.label.label-success OPEN
-				p A weekly match featuring a standard 5v5 battle on the rift between a team of gold-plat and a team of plat-diamond players
-			li.list-group-item
-				h3 League of Bronze B Match #14
-				|	Time: Friday March 25th 8:00 EST
-				br
-				span.label.label-danger CLOSED
-				p A weekly match featuring a standard 5v5 battle on the rift between a team of bronze-silver and a team of gold-plat players
-
-	
+	h2#indexTitle.col-sm-12.text-center.text-primary.well
+		i Welcome!
+	.clearfix
+	#homeAnnouncements.col-sm-7
+		h2.page-header
+			a.text-info(href=hostname+'/announcements') Recent Announcements
+		.col-sm-12
+			.list-group
+				for announcement in announcements
+					a(href=hostname+'/announcements/'+announcement._id+'/'+announcement.title).list-group-item
+						h3= announcement.title
+						p= announcement.summary
+						footer.text-muted.text-right= announcement.time
+		.clearfix
+	#homeEvents.col-sm-5
+		h2.text-info.page-header
+			a(href=hostname+'/events') Upcoming Events
+		.col-sm-12
+			.list-group
+				for event in events
+					-var isOpen = event.nRegistered < event.capacity;
+					-var isOver = (new Date(event.time)).getTime() < Date.now();
+					-var registrationClosed = (new Date(event.time)).getTime() - (24* 60 * 60 * 1000) < Date.now();
+					-var localeDate = (new Date(event.time)).toLocaleString();
+					-var when = localeDate.substring(0, localeDate.length - 6) + localeDate.substring(localeDate.length - 2);
+					a.list-group-item(href=hostname+'/events/'+event._id)
+						h3= event.title
+						|	Time: #{when}
+						br
+						if isOver
+							span.label.label-danger EVENT OVER
+						else if isOpen & !registrationClosed
+							span.label.label-success OPEN
+						else
+							span.label.label-danger CLOSED
+						br
+						br
+						p= event.summary
+		.clearfix

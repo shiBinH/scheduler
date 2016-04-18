@@ -38,14 +38,45 @@ module.exports.loginCheck = function(req, res, next) {
 		res.locals.username = payload.login;
 		res.locals._id = payload._id;//check views for this and replace with req.payload._id
 		res.locals.email = payload.email;
-	}
+		res.locals.admin = payload.admin;
+	};
 	req.headers['authorization'] = 'Bearer ' + token;
 	res.locals.hostname = 'http://' + req.hostname + ':3002';
 	next();
 };//needs modification
 
 module.exports.homeCtrl = function (req, res) {
-	res.render('index');
+	var requestOptions = {
+		url: res.locals.hostname + '/api/announcements',
+		method: 'GET',
+		json: {}
+	};
+	request(requestOptions, function(err, response, body) {
+		if (err) {
+			console.log('\n\tFailed to request announcements\n');
+			res.status(400);
+			res.render('index');
+		}
+		else {
+			requestOptions = {
+				url: res.locals.hostname + '/api/events',
+				method: 'GET',
+				json: {}
+			};
+			request(requestOptions, function(err2, response2, body2) {
+				if (err) {
+					console.log('\n\tFailed to request events\n');
+					res.status(400);
+					res.render('index');
+				} else {
+					res.render('index', {
+						announcements: body.slice(0, 3),
+						events: body2.slice(0, 3)
+					});
+				}
+			});
+		}
+	});
 };
 
 module.exports.announceCtrl = function (req, res) {
@@ -79,8 +110,8 @@ module.exports.createAnnouncement = function(req, res) {
 		json: {
 			summary: req.body.summary,
 			announcement: req.body.announcement,
-			author: req.body.author ? req.body.author : undefined,
-			details: req.body.details
+			details: req.body.details,
+			admin: res.locals.admin
 		}
 	};
 
@@ -89,6 +120,10 @@ module.exports.createAnnouncement = function(req, res) {
 		else if (response.statusCode===401) {
 		    console.log("Invalid token");
 		    res.redirect(req.originalUrl);
+		}
+		else if (response.statusCode===403) {
+			console.log('\n\tUnauthorized Access\n');
+			res.redirect('/');
 		}
 		else {
 			console.log('@@@@@\n@@@@@\tAnnouncement successfully made!\n@@@@@');
@@ -303,7 +338,6 @@ module.exports.getEvent = function(req, res) {
 		}
 		else if (response.statusCode===200) {
 			res.status(200);
-			console.log(body.event);
 			res.render('eventPage', {
 				participant: body.participant,
 				event: body.event
