@@ -10,7 +10,7 @@ var announcementSchema = new Schema({
 	title: {type: String, required: true},
 	summary: {type: String, required: true},
 	description: {type: String, required: true},
-	author: String,
+	author: {type: String, default: 'Admin'},
 	time: String,
 	comments: [commentSchema]
 }, {

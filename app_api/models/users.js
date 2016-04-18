@@ -12,7 +12,6 @@ var userSchema = new mongoose.Schema({
 	bio: String,
 	hash: String,
   salt: String,
-	admin: {type: Boolean, default: false},
 	events: [{
 		type: String,
 		unique: true
@@ -34,7 +33,6 @@ userSchema.methods.generateJwt = function() {
   expirationDate.setDate(expirationDate.getDate()+3);
 
   return jwt.sign({
-			admin: this.admin,
       _id: this.id,
       login: this.login,
       email: this.email,

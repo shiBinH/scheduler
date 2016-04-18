@@ -22,31 +22,25 @@ h1 {
 	margin-top: 20px;
 }
 
-#indexTitle {
-	background-color: floralwhite;
-	box-shadow: 0 10px 15px 5px black;
-	margin-bottom: .5em;
-	margin-top: 0;
+#homeAnnouncements ul li footer {
+	font-size: .65em;
 }
 #eventsList, #announcements-list, #announcementPage, #eventPage, #userPage {
 	background-color: floralwhite;
 	padding-top: 1em;
 	padding-bottom: 1em;
-	box-shadow: 0 20px 25px 5px black;
+	box-shadow: 0 20px 25px 5px;
 }
-#eventsListGroup a:hover, #announcementsListGroup a:hover, #userPageUpcomingList a:hover, #userPagePastList a:hover, 
-{
+#eventsListGroup a:hover, #announcementsListGroup a:hover, #userPageUpcomingList a:hover, #userPagePastList a:hover {
 	border-left: 1.5px solid green;
 	border-right: 1.5px solid green;
 }
 #homeAnnouncements{
-	padding-top: .5em;
-	background-color: floralwhite;
+	background-color: white;
 	box-shadow: -20px 20px 20px;
 }
 #homeEvents {
-	padding-top: .5em;
-	background-color: floralwhite;
+	background-color: white;
 	box-shadow: 20px 20px 20px;
 }
 #comments li:hover {
@@ -75,10 +69,6 @@ h1 {
 }
 #userPagePastList a {
 	background-color: #cccccc;
-}
-
-#contact {
-	margin-top: 1em;
 }
 
 textarea {
