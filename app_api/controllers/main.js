@@ -64,14 +64,23 @@ module.exports.getAnnounce = function(req, res) {
 		});
 };
 module.exports.addAnnounce = function (req, res) {
+	if (!req.body.admin) {
+		res.status(403);
+		res.json({});
+		return;
+	}
 	var newAnnouncement = new announcementsModel({
 		summary: req.body.summary,
 		title: req.body.announcement,
 		description: req.body.details,
-		author: req.body.author
+		author: req.payload.login
 	});
 	newAnnouncement.save(function(err, data) {
-		if (err) console.log(err);
+		if (err) {
+			console.log(err);
+			res.status(401);
+			res.json(err);
+		}
 		else {
 			res.status(201);
 			res.json(data);
