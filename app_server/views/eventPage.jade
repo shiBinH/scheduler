@@ -1,4 +1,4 @@
-extends layout
+extends events
 
 mixin formatInfo(comment)
 	-var localeDate = (new Date(comment.createdAt)).toLocaleString();
@@ -124,10 +124,13 @@ block content
 						.clearfix
 			if isLoggedIn
 				form(action=hostname+'/events/'+event._id+'/comments/add', method='post')
-					fieldset.form-group
+					fieldset#commentLabel.form-group
 						label
-							span.text-muted Make a comment
-						textarea.form-control(name='comment', required)
+							a.text-muted(href='', style='text-decoration: none') Make a comment...
+						#commentArea
+							textarea.form-control(name='comment')
 					fieldset.form-group
 						button.btn.btn-primary.btn-sm(type='submit') Submit
 		.clearfix
+block scripts
+	script(src='/javascripts/comment.js')

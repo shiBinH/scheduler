@@ -1,6 +1,12 @@
 extends layout
 
-
+block navbar
+	li
+		a(href=hostname+'/') HOME
+	li
+		a(href=hostname + '/announcements') ANNOUNCEMENTS
+	li
+		a(href=hostname + '/events') EVENTS
 mixin outputMonths()//- no longer needed
 	-var months = ['January', 'February','March','April','May','June','July','August','September','October','November','December'];
 	-var thisMonth = (new Date()).getMonth();

@@ -1,4 +1,4 @@
-extends layout
+extends announcements
 
 mixin formatInfo(comment)
 	-var localeDate = (new Date(comment.createdAt)).toLocaleString();
@@ -15,10 +15,11 @@ block content
 			li.active THIS
 		h2.col-sm-12.text-primary
 			i= announcement.title
-		small.text-muted.col-sm-3
-			| #{announcement.author}
-			br
-			| #{announcement.time}
+		small.text-muted.col-sm-4
+			p
+				| #{announcement.author}
+				br
+				| #{announcement.time}
 		.clearfix
 		hr
 		.col-sm-12 
@@ -38,11 +39,14 @@ block content
 							small!= comment.comment
 						.clearfix
 			if isLoggedIn
-				form(action=hostname+'/announcements/'+announcement._id+'/comments/add', method='post')
-					fieldset.form-group
+				form(action=hostname+'/announcements/'+announcement._id+'/comments/add', method='post', novalidate)
+					fieldset#commentLabel.form-group
 						label
-							span.text-muted Make a comment
-						textarea.form-control(name='comment', required)
-					fieldset.form-group
-						button.btn.btn-primary.btn-sm(type='submit') Submit
+							a(href='', style='text-decoration: none').text-muted Make a comment
+						#commentArea
+							textarea.form-control(name='comment', required)
+							br
+							button.btn.btn-primary.btn-sm(type='submit') Submit
 		.clearfix
+block scripts
+	script(src='/javascripts/comment.js')

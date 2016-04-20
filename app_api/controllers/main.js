@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var passport = require('passport');
 var announcementsModel = mongoose.model('announcements');
 var eventModel = mongoose.model('events');
 var userModel = mongoose.model('User');
@@ -24,10 +25,10 @@ var formatDate = function (date) {
   formatedDate += ' ' + timeOfDay;
   return formatedDate;
 }
-
+/*
 module.exports.announceList = function(req, res) {
 	announcementsModel
-		.find({}, null, {sort:{createdAt:-1}, limit: 5}, //3rd param takes mongdb cursor methods
+		.find({}, null, {sort:{createdAt:-1}, limit: 3}, //3rd param takes mongdb cursor methods
 			function(err, data) {
 				if(err) console.log(err);
 				else {
@@ -41,6 +42,7 @@ module.exports.announceList = function(req, res) {
 			}}
 		);
 };
+*/
 module.exports.getAnnounce = function(req, res) {
 	announcementsModel
 		.findOne({_id: req.params.id})
@@ -64,7 +66,7 @@ module.exports.getAnnounce = function(req, res) {
 		});
 };
 module.exports.addAnnounce = function (req, res) {
-	if (!req.body.admin) {
+	if (!req.payload.admin) {
 		res.status(403);
 		res.json({});
 		return;
@@ -121,11 +123,54 @@ module.exports.submitAnnounceComment = function(req, res) {
 			}
 		);
 }
+module.exports.moreAnnouncements = function(req, res) {
+	announcementsModel
+		.find(
+			{createdAt:{$lt:req.body.time ? req.body.time : new Date()}},
+			null,
+			{sort: {createdAt:-1}, limit: 4},
+			function(err, announcements){
+				if (err) {
+					console.log('\n\tFailed to get more annoucements');
+					res.status(400);
+					res.json({});
+				} 
+				else {
+					console.log('\n\tGot more announcements form DB\n');
+					for (var i=0; i<announcements.length; i++) {
+						announcements[i].time = formatDate(announcements[i].createdAt);
+					}
+					res.status(200);
+					res.json(announcements);
+				}
+			}
+		)
+};
+module.exports.moreEvents = function(req, res) {
+	eventModel
+		.find(
+			{time: {$lt: req.body.time}},
+			null,
+			{sort: {time:-1}, limit: 3},
+			function(err, events) {
+				if (err) {
+					console.log('DB Error: ' + err);
+					res.status(400);
+					res.json(err);
+				} else {
+					console.log('\n\tFound events\n');
+					res.status(200);
+					res.json(events);
+				}
+			}
+		)
+}//needs improvement
 
 module.exports.eventsList = function(req, res) {
 	eventModel
 		.find()
 		.sort({time: -1})
+		.limit(3)
 		.exec(function(err, events){
 			if (err) {
 				console.log('DB Error: ' + err);
@@ -139,6 +184,11 @@ module.exports.eventsList = function(req, res) {
 		});
 };//chaining sort() to find()
 module.exports.addEvent = function(req, res) {
+	if (!req.payload.admin) {
+		res.status(403);
+		res.jeson({});
+		return;
+	}
 	var newEvent = new eventModel({
 		title: req.body.title,
 		summary: req.body.summary,
@@ -333,7 +383,7 @@ module.exports.submitEventComment = function(req, res) {
 module.exports.userPage = function(req, res) {
 	userModel//find user
 		.findOne(
-			{_id: req.payload._id}, 
+			{_id: req.params.userId}, 
 			null,
 			{},
 			function(err, user) {
@@ -373,6 +423,46 @@ module.exports.userPage = function(req, res) {
 			}
 		);
 };
+module.exports.userUpdate = function(req, res) {
+	passport.authenticate('local', function(err, user, info) {
+		if (err) {
+			console.log('\n\tAuthenticate Error\n');
+			res.status(404);
+			res.json(err);
+		} else if (user) {
+			console.log('\n\tAuthentication Successful\n');
+			var change = {};
+			change[req.body.newField] = req.body.newFieldValue;
+			userModel
+				.update(
+					{email: req.body.email},
+					{$set: change},
+					function(err, response) {
+						if (err) {
+							console.log('\n\tUpdate Error\n');
+							console.log(err);
+							res.status(400);
+							res.json({});
+						}
+						else if (!response.nModified) {
+							console.log('\n\tUser info unchanged\n');
+							res.status(304);
+							res.json({});
+						}
+						else {
+							console.log('\n\tUser info updated\n');
+							res.status(200);
+							res.json(response);
+						}
+					}
+				);		
+		} else {
+			console.log('\n\tFailed authetication');
+			res.status(401);
+			res.json({});
+		}
+	})(req,res);
+}
 module.exports.userEvents = function(req, res) {
 	
 };

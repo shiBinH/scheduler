@@ -1,12 +1,19 @@
 extends layout
 
+block navbar
+	li.active
+		a(href=hostname+'/') HOME
+	li
+		a(href=hostname + '/announcements') ANNOUNCEMENTS
+	li
+		a(href=hostname + '/events') EVENTS
 block content
 	h2#indexTitle.col-sm-12.text-center.text-primary.well
-		i Welcome!
+		i Hello!
 	.clearfix
 	#homeAnnouncements.col-sm-7
 		h2.page-header
-			a.text-info(href=hostname+'/announcements') Recent Announcements
+			a.text-primary(href=hostname+'/announcements') Recent Announcements
 		.col-sm-12
 			.list-group
 				for announcement in announcements
@@ -15,8 +22,9 @@ block content
 						p= announcement.summary
 						footer.text-muted.text-right= announcement.time
 		.clearfix
+		hr
 	#homeEvents.col-sm-5
-		h2.text-info.page-header
+		h2.text-primary.page-header
 			a(href=hostname+'/events') Upcoming Events
 		.col-sm-12
 			.list-group
@@ -40,3 +48,4 @@ block content
 						br
 						p= event.summary
 		.clearfix
+		hr

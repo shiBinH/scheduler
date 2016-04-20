@@ -1,9 +1,53 @@
 extends layout
 
+block navbar
+	li
+		a(href=hostname+'/') HOME
+	li
+		a(href=hostname + '/announcements') ANNOUNCEMENTS
+	li
+		a(href=hostname + '/events') EVENTS
 mixin formatTime(time)
 	-var localeDate = (new Date(time)).toLocaleString();
 	-var when = localeDate.substring(0, localeDate.length - 6) + localeDate.substring(localeDate.length - 2);
 	|	#{when}
+mixin editEmail
+	button(type='button', data-toggle='modal', data-target='#editEmailForm') Edit
+	#editEmailForm.modal.fade(tabindex='-1', role='dialog', aria-labelledby='#editEmailTitle', aria-hidden='true')
+		.modal-dialog(role='document')
+			.modal-content
+				.modal-header
+					button.close(type='button', data-dismiss='modal', aria-label='close')
+						span(aria-hidden='true') &times;
+					h3#editEmailTitle.modal-title.text-center.text-info Edit your email
+				.modal-body
+					.container-fluid
+						.row
+							.col-sm-12
+								form#emailForm(action='', method='post')
+									fieldset.form-group
+										label.col-sm-12
+										.clearfix
+									fieldset.form-group
+										label.col-sm-12(for='email') New Email
+										.col-sm-6
+											input.form-control.input-sm(type='email', name='email')
+										.clearfix
+									fieldset.form-group
+										label.col-sm-12(for='confirm') Confirm Email
+										.col-sm-6
+											input.form-control.input-sm(type='email', name='confirm')
+										.clearfix
+									fieldset.form-group
+										label.col-sm-12(for='password') Please enter your password
+										.col-sm-6
+											input.form-control.input-sm(type='password', name='password', placeholder='Password')
+										.clearfix
+									fieldset.form-group
+										.btn-toolbar
+											button.btn.btn-secondary.pull-right(type='button', data-dismiss='modal') Cancel
+											button.btn.btn-primary.pull-right(type='submit') Submit
+
 block content
 	#userPage.container.col-sm-10.col-sm-offset-1
 		.row
@@ -15,17 +59,24 @@ block content
 			.col-sm-10.col-sm-offset-1
 				h3.text-info
 					i Personal Info 
-				p#moreLineHeight.col-sm-8
+				p#moreLineHeight.col-sm-12
 					|	Name: #{user.firstName} #{user.lastName}
 					br
 					|	Age: #{user.age}
 					br
-					|	Email: #{user.email}
+					| Email: 
+					span#userEmail
+						|	#{user.email} 
+					if _id===user._id
+						+editEmail
 					br
-					|	Gender: #{user.gender}
+					.col-sm-10	Gender: #{user.gender}
 				.clearfix
 				.col-sm-12
-					p About:
+					p About: 
+						if _id===user._id	
+							a.edit
+								small (Edit)
 				.col-sm-8.col-sm-offset-1
 					!{user.bio}
 				.clearfix
@@ -57,3 +108,5 @@ block content
 								small.text-muted When: 
 								+formatTime(event.time)
 				.clearfix
+block scripts
+	script(src='/javascripts/editUserInfo.js')

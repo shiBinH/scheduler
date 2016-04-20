@@ -24,12 +24,7 @@ html
 						span.icon-bar
 				#horizontalnav.collapse.navbar-collapse
 					ul.nav.navbar-nav
-						li
-							a(href=hostname+'/') HOME
-						li
-							a(href=hostname + '/announcements') ANNOUNCEMENTS
-						li
-							a(href=hostname + '/events') EVENTS
+						block navbar
 					if !isLoggedIn
 						form.navbar-form.navbar-right(action='/login', method='get')
 							.btn-toolbar
@@ -38,7 +33,7 @@ html
 					else
 						ul.nav.navbar-nav.navbar-right
 							li
-								a(href=hostname+'/user/'+_id) Welcome #{username}
+								a#navWelcome(href=hostname+'/user/'+_id)= username
 							li
 								form.navbar-form(action='/logout', method='get')
 									button.btn.btn-default(type='submit') Logout
@@ -60,4 +55,4 @@ html
 				.clearfix
 		script(src='/javascripts/jquery-2.2.0.min.js')
 		script(src='/bootstrap/js/bootstrap.min.js')
-
+		block scripts

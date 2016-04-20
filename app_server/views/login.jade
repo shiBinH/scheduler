@@ -1,5 +1,12 @@
 extends layout
 
+block navbar
+	li
+		a(href=hostname+'/') HOME
+	li
+		a(href=hostname + '/announcements') ANNOUNCEMENTS
+	li
+		a(href=hostname + '/events') EVENTS
 block content
 	h2#login.col-md-12.text-center
 		a.page-header Login

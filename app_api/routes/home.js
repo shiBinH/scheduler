@@ -15,12 +15,14 @@ var setAuthHeader = function(req, res, next) {
 };
 
 router.use(setAuthHeader);
-router.get('/announcements', mainCtrl.announceList);
+//router.get('/announcements', mainCtrl.announceList);
 router.get('/announcements/:id', mainCtrl.getAnnounce);
 router.post('/announcements/new', auth, mainCtrl.addAnnounce);
 router.put('/announcements/:announcementId/comments/add', auth, mainCtrl.submitAnnounceComment);
+router.post('/announcements/more', mainCtrl.moreAnnouncements);
 
 router.get('/events', mainCtrl.eventsList);
+router.post('/events', mainCtrl.moreEvents);
 router.post('/events/new', auth, mainCtrl.addEvent);
 router.put('/events/:eventId/join', auth, mainCtrl.joinEvent);
 router.put('/events/:eventId/cancel', auth, mainCtrl.unjoinEvent);
@@ -31,6 +33,7 @@ router.post('/register', authCtrl.register);
 router.post('/login', authCtrl.login);
 
 router.get('/user/:userId', auth, mainCtrl.userPage);
+router.put('/user/:userId/update', auth, mainCtrl.userUpdate);
 router.get('/user/events', mainCtrl.userEvents);
 
 module.exports = router;

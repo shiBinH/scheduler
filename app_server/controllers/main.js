@@ -38,7 +38,6 @@ module.exports.loginCheck = function(req, res, next) {
 		res.locals.username = payload.login;
 		res.locals._id = payload._id;//check views for this and replace with req.payload._id
 		res.locals.email = payload.email;
-		res.locals.admin = payload.admin;
 	};
 	req.headers['authorization'] = 'Bearer ' + token;
 	res.locals.hostname = 'http://' + req.hostname + ':3002';
@@ -47,9 +46,9 @@ module.exports.loginCheck = function(req, res, next) {
 
 module.exports.homeCtrl = function (req, res) {
 	var requestOptions = {
-		url: res.locals.hostname + '/api/announcements',
-		method: 'GET',
-		json: {}
+		url: res.locals.hostname + '/api/announcements/more',
+		method: 'POST',
+		json: {time: req.body.time}
 	};
 	request(requestOptions, function(err, response, body) {
 		if (err) {
@@ -79,22 +78,25 @@ module.exports.homeCtrl = function (req, res) {
 	});
 };
 
-module.exports.announceCtrl = function (req, res) {
+module.exports.announceCtrl = function (req, res) {	
 	var requestOptions = {
-		url: 'http://localhost:3002/api/announcements',
-		method: 'GET',
-		json: {}
+		url: res.locals.hostname + '/api/announcements/more',
+		method: 'POST',
+		json: {
+			time: req.body.time
+		}
 	};
 	request(requestOptions, function(err, response, body) {
 		if(err) {
 			console.log(err);
 			res.status(400);
-			res.send('@@@@@\n@@@@		Request Error\n@@@@@')
+			res.send('@@@@@\n@@@@		Request Error\n@@@@@');
+			return;
 		}
 		res.render('announcements', {
 			announcements: body
 		});
-	});
+	})
 };
 module.exports.announcementForm = function(req, res) {
 	res.render('addAnnouncement');
@@ -110,8 +112,7 @@ module.exports.createAnnouncement = function(req, res) {
 		json: {
 			summary: req.body.summary,
 			announcement: req.body.announcement,
-			details: req.body.details,
-			admin: res.locals.admin
+			details: req.body.details
 		}
 	};
 
@@ -181,6 +182,35 @@ module.exports.submitAnnounceComment = function(req, res) {
 		}
 	})
 };
+module.exports.announcementsMore = function(req, res) {
+	var requestOptions = {
+		url: res.locals.hostname + '/api/announcements/more',
+		method: 'POST',
+		json: {
+			time: req.body.time
+		}
+	};
+	request(requestOptions, function(err, response, body) {
+		if (err) {
+			console.log(err);
+			res.status(400);
+			res.json({});
+		} else if (response.statusCode===200) {
+			var href = [];
+			for (var i=0; i<body.length; i++) {
+				href.push(res.locals.hostname+'/announcements/'+body[i]._id+'/'+body[i].title);
+			}
+			res.status(200);
+			res.json({
+				announcements: body,
+				href: href
+			});
+		} else {
+			res.status(404);
+			res.json(body);
+		}
+	});
+}
 
 module.exports.eventsCtrl = function(req, res) {
 	var requestOptions = {
@@ -236,6 +266,10 @@ module.exports.submitEvent = function(req, res) {
 			res.render('eventsForm', {
 				message: 'Event successfully created!'
 			});
+		}
+		else if (response.statusCode===403) {
+			console.log('\n\tUnauthorized Access\n');
+			res.redirect('/');
 		}
 		else if (response.statusCode===400) {
 			res.status(400);
@@ -375,6 +409,35 @@ module.exports.submitEventComment = function(req, res) {
 		}
 	});
 };
+module.exports.moreEvents = function(req, res) {
+	var requestOptions = {
+		url: res.locals.hostname + '/api/events',
+		method: 'POST',
+		json: {
+			time: req.body.time
+		}
+	};
+	request(requestOptions, function(err, response, body) {
+		if (err) {
+			console.log(err);
+			res.status(400);
+			res.json({});
+		} else if (response.statusCode===200) {
+			var href = [];
+			for (var i=0; i<body.length; i++) {
+				href.push(res.locals.hostname + '/events/' + body[i]._id);
+			}
+			res.status(200);
+			res.json({
+				events: body,
+				href: href
+			});
+		} else {
+			res.status(404);
+			res.json(body);
+		}
+	})
+}
 
 module.exports.registerForm = function(req, res) {
 	res.render('register', {message: ''});
@@ -500,6 +563,47 @@ module.exports.userPageCtrl = function(req, res) {
 		}
 	})
 };
+module.exports.userUpdate = function(req, res) {
+	var tokenHeader = 'Bearer ' + req.session.schedulerToken;
+	var keys = Object.keys(req.body);
+	var requestOptions = {
+		url: res.locals.hostname + '/api/user/' + req.params.userId + '/update',
+		method: 'PUT',
+		json: {
+			password: req.body.password,
+			email: res.locals.email,
+			newField: keys[0],
+			newFieldValue: req.body[keys[0]]
+		},
+		headers: {
+			token: tokenHeader
+		}
+	};
+	request(requestOptions, function(err, response, body) {
+		if (err) {
+			console.log('\n\tRequest Error\n');
+			console.log(err);
+			res.status(200);
+			res.json({message: 'Error, please try again'});
+		} else if (response.statusCode===304) {
+			res.status(200);
+			res.json({
+				"message": "User info unchanged"
+			});
+		} else if (response.statusCode===200) {
+			res.status(200);
+			res.json({
+				message: 'Successfully updated!',
+				success: true
+			});
+		} else {
+			res.status(200);
+			res.json({
+				message: 'Incorrect password'
+			});
+		}
+	})
+}
 module.exports.userEvents = function(req, res) {
 
 }

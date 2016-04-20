@@ -17,6 +17,7 @@ router.get('/announcements/new', mainCtrl.announcementForm);
 router.post('/announcements/new', auth,mainCtrl.createAnnouncement);
 router.get('/announcements/:announcementId/:announcementTitle', mainCtrl.getAnnouncement);
 router.post('/announcements/:announcementId/comments/add', mainCtrl.submitAnnounceComment);
+router.post('/announcements/more', mainCtrl.announcementsMore);
 
 router.get('/events', mainCtrl.eventsCtrl);
 router.get('/events/new', auth, mainCtrl.addEventsCtrl);
@@ -25,6 +26,7 @@ router.post('/events/:eventId/join', mainCtrl.joinEvent);
 router.post('/events/:eventId/cancel', mainCtrl.unjoinEvent);
 router.get('/events/:eventId', mainCtrl.getEvent);
 router.post('/events/:eventId/comments/add', mainCtrl.submitEventComment);
+router.post ('/events/more', mainCtrl.moreEvents);
 
 router.get('/register', mainCtrl.registerForm);
 router.post('/register', mainCtrl.registerCtrl);
@@ -34,6 +36,7 @@ router.post('/login', mainCtrl.loginCtrl);
 router.get('/logout',mainCtrl.logoutCtrl);
 
 router.get('/user/:userId', mainCtrl.userPageCtrl);
+router.post('/user/:userId/update', mainCtrl.userUpdate);
 router.get('/user/:userId/events', mainCtrl.userEvents);
 
 module.exports = router;

@@ -1,6 +1,8 @@
-
-3. use express-jwt instead of res.locals authorization
-4. scripts
 5. AJAX
+	- user page
+	- comments
 6. admin powers
 7. push to server
+
+others:
+	- birthday instead of age
