@@ -26,7 +26,7 @@ mixin editEmail
 							.col-sm-12
 								form#emailForm(action='', method='post')
 									fieldset.form-group
-										label.col-sm-12
+										label#emailMsg.col-sm-12
 										.clearfix
 									fieldset.form-group
 										label.col-sm-12(for='email') New Email
@@ -44,7 +44,7 @@ mixin editEmail
 											input.form-control.input-sm(type='password', name='password', placeholder='Password')
 										.clearfix
 									fieldset.form-group
-										.btn-toolbar
+										#emailBtn.btn-toolbar
 											button.btn.btn-secondary.pull-right(type='button', data-dismiss='modal') Cancel
 											button.btn.btn-primary.pull-right(type='submit') Submit
 mixin editAbout
@@ -55,14 +55,14 @@ mixin editAbout
 				.modal-header
 					button.close(type='button', data-dismiss='modal', aria-label='close')
 						span(aria-hidden='true') &times;
-					h3#editAboutTitle.modal-title.text-center.text-info Edit your email
+					h3#editAboutTitle.modal-title.text-center.text-info About Me
 				.modal-body
 					.container-fluid
 						.row
 							.col-sm-12
 								form#aboutForm(action='', method='post')
 									fieldset.form-group
-										label.col-sm-12
+										label#aboutMsg.col-sm-12
 										.clearfix
 									fieldset.form-group
 										label.col-sm-12(for='bio') About
@@ -75,7 +75,7 @@ mixin editAbout
 											input.form-control.input-sm(type='password', name='password', placeholder='Password')
 										.clearfix
 									fieldset.form-group
-										.btn-toolbar
+										#aboutBtn.btn-toolbar
 											button.btn.btn-secondary.pull-right(type='button', data-dismiss='modal') Cancel
 											button.btn.btn-primary.pull-right(type='submit') Submit
 

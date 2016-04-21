@@ -214,7 +214,7 @@ module.exports.announcementsMore = function(req, res) {
 
 module.exports.eventsCtrl = function(req, res) {
 	var requestOptions = {
-		url: 'http://localhost:3002/api/events',
+		url: res.locals.hostname + '/api/events',
 		method: 'GET',
 		json: {}
 	};
@@ -246,7 +246,7 @@ module.exports.submitEvent = function(req, res) {
 	}
 	var eventTime = formatDate(req.body);
 	var requestOptions = {
-		url: 'http://localhost:3002/api/events/new',
+		url: res.locals.hostname + '/api/events/new',
 		method: 'POST',
 		headers: {
 			token: tokenHeader
@@ -303,7 +303,7 @@ module.exports.joinEvent = function(req, res) {
 		}
 		else if (response.statusCode===304) {//needs ajax implementation of this
 			var requestOptions = {
-				url: 'http://localhost:3002/api/events',
+				url: res.locals.hostname + '/api/events',
 				method: 'GET',
 				json: {}
 			};
@@ -450,7 +450,7 @@ module.exports.registerCtrl = function(req, res) {
 		});
 	}
 	var requestOptions = {
-		url: 'http://localhost:3002/api/register',
+		url: res.locals.hostname + '/api/register',
 		method: 'POST',
 		json: {
 			username: req.body.username,
@@ -499,7 +499,7 @@ module.exports.loginCtrl = function(req, res) {
 	}
 	
 	var requestOptions = {
-		url: 'http://localhost:3002/api/login',
+		url: res.locals.hostname + '/api/login',
 		method: 'POST',
 		json: {
 			email: req.body.email,

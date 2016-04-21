@@ -1,6 +1,4 @@
-5. AJAX
-	- user page
-	- comments
+
 6. admin powers
 7. push to server
 

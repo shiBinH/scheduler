@@ -13,13 +13,12 @@ $(function(){
 			success: function(data) {
 				var $fieldset = $('fieldset');
 				if ("success" in data) {
-					$fieldset.eq(0).find('label').html('<span class="text-success">'+data.message+'</span>');
-					$fieldset.find('button').remove();
-					$fieldset.find('.btn-toolbar').html('<a href="'+data.link+'/login'+'"><button class="btn btn-primary pull-right" type="button">Done</button></a>');
+					$fieldset.find('#emailMsg').html('<span class="text-success">'+data.message+'</span>');
+					$fieldset.find('#emailBtn').html('<a href="'+data.link+'/login'+'"><button class="btn btn-primary pull-right" type="button">Done</button></a>');
 					console.log('Success');
 				}
 				else {
-					$fieldset.eq(0).find('label').html('<span class="text-danger">'+data.message+'</span>');
+					$fieldset.find('#emailMsg').html('<span class="text-danger">'+data.message+'</span>');
 					console.log('Failed');
 				}
 			}
@@ -39,13 +38,12 @@ $(function(){
 			success: function(data) {
 				var $fieldset = $('fieldset');
 				if ("success" in data) {
-					$fieldset.eq(0).find('label').html('<span class="text-success">'+data.message+'</span>');
-					$fieldset.eq($fieldset.length-1).find('button').remove();
-					$fieldset.eq($fieldset.length-1).html('<a href="'+data.link+'/logout'+'"><button class="btn btn-primary pull-right" type="button">Done</button></a>');
+					$fieldset.find('#aboutMsg').html('<span class="text-success">'+data.message+'</span>');
+					$fieldset.find('#aboutBtn').html('<a href="'+data.link+'/login'+'"><button class="btn btn-primary pull-right" type="button">Done</button></a>');
 					console.log('Success');
 				}
 				else {
-					$fieldset.eq(0).find('label').html('<span class="text-danger">'+data.message+'</span>');
+					$fieldset.find('#aboutMsg').html('<span class="text-danger">'+data.message+'</span>');
 					console.log('Failed');
 				}
 			}
