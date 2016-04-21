@@ -47,6 +47,37 @@ mixin editEmail
 										.btn-toolbar
 											button.btn.btn-secondary.pull-right(type='button', data-dismiss='modal') Cancel
 											button.btn.btn-primary.pull-right(type='submit') Submit
+mixin editAbout
+	button(type='button', data-toggle='modal', data-target='#editAboutForm') Edit
+	#editAboutForm.modal.fade(tabindex='-1', role='dialog', aria-labelledby='#editAboutTitle', aria-hidden='true')
+		.modal-dialog(role='document')
+			.modal-content
+				.modal-header
+					button.close(type='button', data-dismiss='modal', aria-label='close')
+						span(aria-hidden='true') &times;
+					h3#editAboutTitle.modal-title.text-center.text-info Edit your email
+				.modal-body
+					.container-fluid
+						.row
+							.col-sm-12
+								form#aboutForm(action='', method='post')
+									fieldset.form-group
+										label.col-sm-12
+										.clearfix
+									fieldset.form-group
+										label.col-sm-12(for='bio') About
+										.col-sm-12
+											textarea.form-control(name='bio')
+										.clearfix
+									fieldset.form-group
+										label.col-sm-12(for='password') Please enter your password
+										.col-sm-6
+											input.form-control.input-sm(type='password', name='password', placeholder='Password')
+										.clearfix
+									fieldset.form-group
+										.btn-toolbar
+											button.btn.btn-secondary.pull-right(type='button', data-dismiss='modal') Cancel
+											button.btn.btn-primary.pull-right(type='submit') Submit
 
 block content
 	#userPage.container.col-sm-10.col-sm-offset-1
@@ -75,8 +106,7 @@ block content
 				.col-sm-12
 					p About: 
 						if _id===user._id	
-							a.edit
-								small (Edit)
+							+editAbout
 				.col-sm-8.col-sm-offset-1
 					!{user.bio}
 				.clearfix

@@ -431,11 +431,12 @@ module.exports.userUpdate = function(req, res) {
 			res.json(err);
 		} else if (user) {
 			console.log('\n\tAuthentication Successful\n');
+			console.log(req.body);
 			var change = {};
 			change[req.body.newField] = req.body.newFieldValue;
 			userModel
 				.update(
-					{email: req.body.email},
+					{email: req.payload.email},
 					{$set: change},
 					function(err, response) {
 						if (err) {

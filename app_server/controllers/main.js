@@ -591,8 +591,10 @@ module.exports.userUpdate = function(req, res) {
 				"message": "User info unchanged"
 			});
 		} else if (response.statusCode===200) {
+			req.session.schedulerToken = null;
 			res.status(200);
 			res.json({
+				link: res.locals.hostname,
 				message: 'Successfully updated!',
 				success: true
 			});
