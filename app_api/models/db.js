@@ -2,7 +2,9 @@ var mongoose = require('mongoose');
 var gracefulShutdown;
 var readLine = require('readline');
 var dbURI = 'mongodb://localhost/scheduler';
-
+if (process.env.NODE_ENV === 'production') {
+	dbURI = process.env.MONGODB_URI;
+}
 mongoose.connect(dbURI);
 
 if (process.platform ==="win32") {

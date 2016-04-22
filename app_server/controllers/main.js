@@ -40,7 +40,8 @@ module.exports.loginCheck = function(req, res, next) {
 		res.locals.email = payload.email;
 	};
 	req.headers['authorization'] = 'Bearer ' + token;
-	res.locals.hostname = 'http://' + req.hostname + ':3002';
+	if (process.env.NODE_ENV==='production') res.locals.hostname = 'http://sch3dul3r.herokuapp.com';
+	else res.locals.hostname = 'http://' + req.hostname + ':3002';
 	next();
 };//needs modification
 
